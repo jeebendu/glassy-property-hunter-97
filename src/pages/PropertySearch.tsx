@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useLocation, Link } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
@@ -193,7 +194,8 @@ const PropertySearch = () => {
     } else if (key === "priceRange") {
       newFilters.priceRange = [0, 10000000];
     } else {
-      newFilters[key as keyof ActiveFilters] = "all";
+      // Use type assertion to handle the key properly
+      (newFilters as any)[key] = "all";
     }
     
     setActiveFilters(newFilters);

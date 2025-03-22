@@ -8,7 +8,7 @@ import { useState } from "react";
 import Index from "./pages/Index";
 import PropertyDetails from "./pages/PropertyDetails";
 import NotFound from "./pages/NotFound";
-import PropertySearch from "./components/PropertySearch";
+import PropertySearch from "./pages/PropertySearch";
 import Blog from "./pages/Blog";
 import PostProperty from "./pages/PostProperty";
 import UserProfile from "./pages/UserProfile";
@@ -33,7 +33,7 @@ const App = () => {
           <Routes>
             <Route path="/" element={<Index openAuthDialog={openAuthDialog} />} />
             <Route path="/property/:id" element={<PropertyDetails openAuthDialog={openAuthDialog} />} />
-            <Route path="/search" element={<PropertySearch openAuthDialog={openAuthDialog} />} />
+            <Route path="/search" element={<PropertySearch />} />
             <Route path="/blog" element={<Blog openAuthDialog={openAuthDialog} />} />
             <Route path="/post-property" element={<PostProperty openAuthDialog={openAuthDialog} />} />
             <Route path="/profile" element={<UserProfile openAuthDialog={openAuthDialog} />} />

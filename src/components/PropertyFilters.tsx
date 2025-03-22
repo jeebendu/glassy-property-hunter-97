@@ -10,7 +10,7 @@ interface FilterOption {
 }
 
 interface PropertyFiltersProps {
-  onFilterChange: (filters: any) => void;
+  onFilterChange: (filters: ActiveFilters) => void;
 }
 
 // Define additional filter options
@@ -83,7 +83,7 @@ const PropertyFilters = ({ onFilterChange }: PropertyFiltersProps) => {
     setSelectedFilters(newSelectedFilters);
   }, [activeFilters]);
 
-  const handleFilterChange = (filterType: string, value: string | number[]) => {
+  const handleFilterChange = (filterType: keyof ActiveFilters, value: string | number[]) => {
     const newFilters = {
       ...activeFilters,
       [filterType]: value
@@ -118,7 +118,7 @@ const PropertyFilters = ({ onFilterChange }: PropertyFiltersProps) => {
     } else if (key === "priceRange") {
       newFilters.priceRange = [0, 10000000];
     } else {
-      newFilters[key as keyof typeof newFilters] = "all";
+      (newFilters as any)[key] = "all";
     }
     
     setActiveFilters(newFilters);

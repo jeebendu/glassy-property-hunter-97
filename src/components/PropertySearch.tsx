@@ -33,7 +33,7 @@ interface ActiveFilters {
   priceRange: number[];
 }
 
-const PropertySearch = ({ openAuthDialog }: { openAuthDialog: () => void }) => {
+const PropertySearch = ({ openAuthDialog }: { openAuthDialog?: () => void }) => {
   const location = useLocation();
   const isMobile = useIsMobile();
   const [searchTerm, setSearchTerm] = useState('');
@@ -193,7 +193,7 @@ const PropertySearch = ({ openAuthDialog }: { openAuthDialog: () => void }) => {
     } else if (key === "priceRange") {
       newFilters.priceRange = [0, 10000000];
     } else {
-      newFilters[key as keyof ActiveFilters] = "all";
+      (newFilters as any)[key] = "all";
     }
     
     setActiveFilters(newFilters);
@@ -211,7 +211,8 @@ const PropertySearch = ({ openAuthDialog }: { openAuthDialog: () => void }) => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navbar openAuthDialog={openAuthDialog} />
+      {openAuthDialog && <Navbar openAuthDialog={openAuthDialog} />}
+      {!openAuthDialog && <Navbar />}
 
       <div className="pt-20">
         <div className="bg-primary/5 py-4">
