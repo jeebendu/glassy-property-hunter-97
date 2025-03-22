@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Property } from '@/lib/data';
 import { 
@@ -24,11 +23,10 @@ import {
   Check,
   Wifi,
   Tv,
-  Swimming,
+  Waves,
   ShieldCheck,
   Flower2,
   Dumbbell,
-  Waves,
   Utensils,
   Gamepad2,
   ParkingSquare,
@@ -46,7 +44,7 @@ const amenityIcons: {[key: string]: React.ReactNode} = {
   'Air Conditioning': <Wifi size={16} className="text-primary" />,
   'Wifi': <Wifi size={16} className="text-primary" />,
   'TV': <Tv size={16} className="text-primary" />,
-  'Swimming Pool': <Swimming size={16} className="text-primary" />,
+  'Swimming Pool': <Waves size={16} className="text-primary" />,
   '24/7 Security': <ShieldCheck size={16} className="text-primary" />,
   'Garden': <Flower2 size={16} className="text-primary" />,
   'Gym': <Dumbbell size={16} className="text-primary" />,

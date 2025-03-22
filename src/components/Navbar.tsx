@@ -17,10 +17,10 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 
 interface Props {
-  openAuthDialog: () => void;
+  openAuthDialog?: () => void;
 }
 
-const Navbar = ({ openAuthDialog }: Props) => {
+const Navbar = ({ openAuthDialog = () => {} }: Props) => {
   const [scrolled, setScrolled] = useState(false);
   const [navOpen, setNavOpen] = useState(false);
   const { user, logout } = useAuth();

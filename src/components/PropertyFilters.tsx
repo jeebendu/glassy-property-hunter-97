@@ -38,7 +38,18 @@ const furnishingOptions = [
 
 const PropertyFilters = ({ onFilterChange }: PropertyFiltersProps) => {
   const [filtersOpen, setFiltersOpen] = useState(false);
-  const [activeFilters, setActiveFilters] = useState({
+  const [activeFilters, setActiveFilters] = useState<{
+    type: string;
+    price: string;
+    bedrooms: string;
+    bathrooms: string;
+    status: string;
+    balcony: string;
+    readyToMove: string;
+    furnishing: string;
+    carpetArea: number[];
+    priceRange: number[];
+  }>({
     type: "all",
     price: "all",
     bedrooms: "all",
