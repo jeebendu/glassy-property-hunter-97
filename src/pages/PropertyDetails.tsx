@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
+
+import React, { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
@@ -6,34 +7,13 @@ import { properties } from '@/lib/data';
 import { ChevronLeft, ChevronRight, Heart } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import PropertyInfo from '@/components/PropertyInfo';
-import ShareButton from '@/components/ShareButton';
-import MobileContactBar from '@/components/MobileContactBar';
 
-interface PropertyDetailsProps {
-  openAuthDialog?: () => void;
-}
-
-const PropertyDetails = ({ openAuthDialog = () => {} }: PropertyDetailsProps) => {
+const PropertyDetails = () => {
   const { id } = useParams<{ id: string }>();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isFavorite, setIsFavorite] = useState(false);
-  const [isTabsSticky, setIsTabsSticky] = useState(false);
-  const tabsRef = useRef<HTMLDivElement>(null);
   
   const property = properties.find(p => p.id === id);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      if (tabsRef.current) {
-        const headerHeight = 80; // Approximate height of the header
-        const tabsPosition = tabsRef.current.getBoundingClientRect().top;
-        setIsTabsSticky(tabsPosition <= headerHeight);
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
   
   if (!property) {
     return (
@@ -65,7 +45,7 @@ const PropertyDetails = ({ openAuthDialog = () => {} }: PropertyDetailsProps) =>
 
   return (
     <div className="min-h-screen bg-background">
-      <Navbar openAuthDialog={openAuthDialog} />
+      <Navbar />
       
       <div className="pt-24 pb-16">
         <div className="container-custom">
@@ -95,7 +75,6 @@ const PropertyDetails = ({ openAuthDialog = () => {} }: PropertyDetailsProps) =>
                   maximumFractionDigits: 0,
                 }).format(property.price)}
               </span>
-              <ShareButton iconOnly className="h-10 w-10 glass rounded-full" />
               <button
                 className={cn(
                   "h-10 w-10 glass rounded-full flex items-center justify-center transition-all duration-300 hover:bg-white",
@@ -183,17 +162,8 @@ const PropertyDetails = ({ openAuthDialog = () => {} }: PropertyDetailsProps) =>
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Main Content */}
             <div className="lg:col-span-2">
-              {/* Sticky Tabs Container */}
-              <div 
-                ref={tabsRef}
-                className={cn(
-                  "transition-all duration-300",
-                  isTabsSticky && "sticky top-[76px] z-30 bg-white/95 backdrop-blur-sm shadow-sm -mx-4 px-4 py-2"
-                )}
-              >
-                {/* Detailed Property Info */}
-                <PropertyInfo property={property} />
-              </div>
+              {/* Detailed Property Info */}
+              <PropertyInfo property={property} />
             </div>
             
             {/* Sidebar */}
@@ -267,14 +237,6 @@ const PropertyDetails = ({ openAuthDialog = () => {} }: PropertyDetailsProps) =>
           </div>
         </div>
       </div>
-      
-      {/* Mobile Contact Bar */}
-      <MobileContactBar 
-        agent={property.agent}
-        propertyId={property.id}
-        propertyTitle={property.title}
-        openAuthDialog={openAuthDialog}
-      />
       
       <Footer />
     </div>

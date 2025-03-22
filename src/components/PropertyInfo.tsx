@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Property } from '@/lib/data';
 import { 
@@ -20,17 +21,7 @@ import {
   Users,
   User,
   BadgeCheck,
-  Check,
-  Wifi,
-  Tv,
-  Waves,
-  ShieldCheck,
-  Flower2,
-  Dumbbell,
-  Utensils,
-  Gamepad2,
-  ParkingSquare,
-  Sofa
+  Check
 } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from '@/lib/utils';
@@ -38,29 +29,6 @@ import { cn } from '@/lib/utils';
 interface PropertyInfoProps {
   property: Property;
 }
-
-// Map for amenity icons
-const amenityIcons: {[key: string]: React.ReactNode} = {
-  'Air Conditioning': <Wifi size={16} className="text-primary" />,
-  'Wifi': <Wifi size={16} className="text-primary" />,
-  'TV': <Tv size={16} className="text-primary" />,
-  'Swimming Pool': <Waves size={16} className="text-primary" />,
-  '24/7 Security': <ShieldCheck size={16} className="text-primary" />,
-  'Garden': <Flower2 size={16} className="text-primary" />,
-  'Gym': <Dumbbell size={16} className="text-primary" />,
-  'Water Supply': <Waves size={16} className="text-primary" />,
-  'Kitchen': <Utensils size={16} className="text-primary" />,
-  'Game Room': <Gamepad2 size={16} className="text-primary" />,
-  'Parking': <ParkingSquare size={16} className="text-primary" />,
-  'Power Backup': <Check size={16} className="text-primary" />,
-  'Lift': <ArrowUpRight size={16} className="text-primary" />,
-  'Furnished': <Sofa size={16} className="text-primary" />,
-};
-
-// Function to get icon for amenity
-const getAmenityIcon = (amenity: string) => {
-  return amenityIcons[amenity] || <Check size={16} className="text-primary" />;
-};
 
 const PropertyInfo: React.FC<PropertyInfoProps> = ({ property }) => {
   return (
@@ -113,12 +81,12 @@ const PropertyInfo: React.FC<PropertyInfoProps> = ({ property }) => {
                 {property.balcony && (
                   <div className="flex items-center space-x-3">
                     <ArrowUpRight className="h-5 w-5 text-primary" />
-                    <span>{property.balcony} Balcony</span>
+                    <span>{property.balcony}</span>
                   </div>
                 )}
                 {property.furnishType && (
                   <div className="flex items-center space-x-3">
-                    <Sofa className="h-5 w-5 text-primary" />
+                    <CheckCircle2 className="h-5 w-5 text-primary" />
                     <span>{property.furnishType}</span>
                   </div>
                 )}
@@ -199,7 +167,7 @@ const PropertyInfo: React.FC<PropertyInfoProps> = ({ property }) => {
                 {property.amenities.map((amenity, index) => (
                   <div key={index} className="flex items-center space-x-2">
                     <div className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/10">
-                      {getAmenityIcon(amenity)}
+                      <Check size={16} className="text-primary" />
                     </div>
                     <span>{amenity}</span>
                   </div>
@@ -234,7 +202,7 @@ const PropertyInfo: React.FC<PropertyInfoProps> = ({ property }) => {
               {[...property.amenities, 'Air Conditioning', '24/7 Security', 'Garden', 'Gym', 'Swimming Pool'].map((feature, index) => (
                 <div key={index} className="flex items-center space-x-2">
                   <div className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/10">
-                    {getAmenityIcon(feature)}
+                    <Check size={16} className="text-primary" />
                   </div>
                   <span>{feature}</span>
                 </div>

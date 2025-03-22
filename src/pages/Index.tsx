@@ -8,22 +8,23 @@ import { useAnimationOnScroll } from '@/lib/animations';
 import TopCities from '@/components/TopCities';
 import BlogSection from '@/components/BlogSection';
 
-interface IndexProps {
-  openAuthDialog?: () => void;
-}
-
-const Index = ({ openAuthDialog }: IndexProps) => {
+const Index = () => {
   const aboutAnimation = useAnimationOnScroll('up');
   const statsAnimation = useAnimationOnScroll('up', 0.1, 200);
   
   return (
     <div className="min-h-screen bg-background">
-      <Navbar openAuthDialog={openAuthDialog} />
+      <Navbar />
       <Hero />
       
       {/* Featured Properties Section */}
       <section className="py-16">
         <div className="container-custom">
+          <div className="mb-10">
+            <h2 className="section-title">Discover Our Properties</h2>
+            <p className="section-subtitle">Find the perfect property that suits your needs</p>
+          </div>
+          
           <FeaturedProperties />
         </div>
       </section>
