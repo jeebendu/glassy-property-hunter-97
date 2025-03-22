@@ -1,25 +1,47 @@
 
 import React, { useState } from 'react';
 import { Search, MapPin, ChevronDown } from 'lucide-react';
-import { propertyTypes, statusOptions } from '@/lib/data';
 import { useAnimationOnScroll } from '@/lib/animations';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import { useIsMobile } from '@/hooks/use-mobile';
+import { 
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { useNavigate } from 'react-router-dom';
+import LocationSelector from './LocationSelector';
 
 const Hero = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedLocation, setSelectedLocation] = useState('Bengaluru');
-  const [propertyType, setPropertyType] = useState('all');
   const [activeTab, setActiveTab] = useState('buy');
+  const [showLocationDialog, setShowLocationDialog] = useState(false);
   
   const titleAnimation = useAnimationOnScroll('up');
   const subtitleAnimation = useAnimationOnScroll('up', 0.1, 200);
   const searchAnimation = useAnimationOnScroll('up', 0.1, 400);
+  const isMobile = useIsMobile();
+  const navigate = useNavigate();
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log({ searchTerm, propertyType, location: selectedLocation, type: activeTab });
-    // Implement search functionality
+    if (!selectedLocation) {
+      setShowLocationDialog(true);
+      return;
+    }
+    console.log({ searchTerm, location: selectedLocation, type: activeTab });
+    navigate('/search', { 
+      state: { searchTerm, location: selectedLocation, type: activeTab } 
+    });
+  };
+
+  const handleLocationSelect = (location: string) => {
+    setSelectedLocation(location);
+    setShowLocationDialog(false);
   };
 
   return (
@@ -51,7 +73,7 @@ const Hero = () => {
             ref={subtitleAnimation.ref}
             className={`${subtitleAnimation.animationClass} text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight`}
           >
-            Properties to buy in {selectedLocation}
+            Properties to {activeTab} in {selectedLocation}
           </h1>
           
           <p 
@@ -61,10 +83,20 @@ const Hero = () => {
             10K+ listings added daily and 63K+ total verified
           </p>
 
-          {/* Search Form */}
+          {/* Location Selector Dialog */}
+          <Dialog open={showLocationDialog} onOpenChange={setShowLocationDialog}>
+            <DialogContent className="sm:max-w-md">
+              <DialogHeader>
+                <DialogTitle>Select a Location</DialogTitle>
+              </DialogHeader>
+              <LocationSelector onSelect={handleLocationSelect} />
+            </DialogContent>
+          </Dialog>
+
+          {/* Search Form - Desktop */}
           <div
             ref={searchAnimation.ref}
-            className={`${searchAnimation.animationClass} bg-white rounded-2xl shadow-xl overflow-hidden max-w-5xl mt-10`}
+            className={`${searchAnimation.animationClass} bg-white rounded-2xl shadow-xl overflow-hidden max-w-5xl mt-10 hidden md:block`}
           >
             {/* Tabs */}
             <div className="flex border-b">
@@ -86,13 +118,23 @@ const Hero = () => {
             {/* Search Inputs */}
             <form onSubmit={handleSearch} className="flex flex-col md:flex-row">
               <div className="flex items-center border-r border-gray-200 px-4 py-3 w-full md:w-1/3">
-                <div className="relative w-full cursor-pointer">
-                  <div className="flex items-center">
-                    <MapPin size={20} className="text-gray-400 mr-3" />
-                    <div className="flex-1">{selectedLocation}</div>
-                    <ChevronDown size={18} className="text-gray-400 ml-2" />
-                  </div>
-                </div>
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <div className="relative w-full cursor-pointer">
+                      <div className="flex items-center">
+                        <MapPin size={20} className="text-gray-400 mr-3" />
+                        <div className="flex-1">{selectedLocation || 'Select Location'}</div>
+                        <ChevronDown size={18} className="text-gray-400 ml-2" />
+                      </div>
+                    </div>
+                  </DialogTrigger>
+                  <DialogContent className="sm:max-w-md">
+                    <DialogHeader>
+                      <DialogTitle>Select a Location</DialogTitle>
+                    </DialogHeader>
+                    <LocationSelector onSelect={handleLocationSelect} />
+                  </DialogContent>
+                </Dialog>
               </div>
               
               <div className="flex-1 px-4 py-3">
@@ -116,6 +158,28 @@ const Hero = () => {
             </form>
           </div>
 
+          {/* Search Form - Mobile */}
+          <div
+            ref={searchAnimation.ref}
+            className={`${searchAnimation.animationClass} md:hidden mt-8`}
+          >
+            <form onSubmit={handleSearch} className="relative">
+              <Input
+                type="text"
+                placeholder="Search for properties..."
+                className="border rounded-full py-6 pl-6 pr-14 bg-white/90 backdrop-blur-md shadow-lg text-foreground"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+              <Button
+                type="submit"
+                className="absolute right-1 top-1 bottom-1 rounded-full bg-emerald-500 hover:bg-emerald-600 aspect-square p-0 min-w-12"
+              >
+                <Search size={20} />
+              </Button>
+            </form>
+          </div>
+
           {/* Continue last search */}
           <div className="mt-4 flex items-center space-x-4">
             <button className="text-white hover:text-primary transition-colors">
@@ -123,7 +187,8 @@ const Hero = () => {
             </button>
             
             <div className="bg-blue-400/30 text-white px-6 py-2 rounded-full flex items-center">
-              <span>Bengaluru, Karnataka,...</span>
+              <span className="md:inline hidden">Bengaluru, Karnataka,...</span>
+              <span className="md:hidden">Bengaluru...</span>
               <ChevronDown size={18} className="ml-2" />
             </div>
           </div>

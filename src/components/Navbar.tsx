@@ -1,12 +1,17 @@
 
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Search, Menu, X } from 'lucide-react';
+import { Search, Menu, X, MapPin } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useIsMobile } from '@/hooks/use-mobile';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import LocationSelector from './LocationSelector';
 
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [selectedLocation, setSelectedLocation] = useState('Bengaluru');
+  const isMobile = useIsMobile();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -22,6 +27,10 @@ const Navbar = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  const handleLocationSelect = (location: string) => {
+    setSelectedLocation(location);
+  };
+
   return (
     <header 
       className={cn(
@@ -30,24 +39,46 @@ const Navbar = () => {
       )}
     >
       <div className="container-custom flex justify-between items-center">
-        <Link to="/" className="flex items-center">
-          <span className="text-2xl font-bold tracking-tight text-primary">Prime<span className="text-foreground">Estate</span></span>
-        </Link>
+        <div className="flex items-center">
+          <Link to="/" className="flex items-center">
+            <span className="text-2xl font-bold tracking-tight text-primary">Prime<span className="text-foreground">Estate</span></span>
+          </Link>
+
+          {/* Mobile Location Selector */}
+          {isMobile && (
+            <Dialog>
+              <DialogTrigger asChild>
+                <button className="ml-3 flex items-center text-sm text-white/80">
+                  <MapPin size={16} className="mr-1" />
+                  <span className="max-w-24 overflow-hidden text-ellipsis whitespace-nowrap">{selectedLocation}</span>
+                  <ChevronDown size={14} className="ml-1" />
+                </button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-md">
+                <DialogHeader>
+                  <DialogTitle>Select a Location</DialogTitle>
+                </DialogHeader>
+                <LocationSelector onSelect={handleLocationSelect} />
+              </DialogContent>
+            </Dialog>
+          )}
+        </div>
 
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center space-x-8">
           <Link to="/" className="nav-link">Home</Link>
-          <Link to="/properties" className="nav-link">Properties</Link>
+          <Link to="/search" className="nav-link">Properties</Link>
+          <Link to="/blog" className="nav-link">Blog</Link>
           <Link to="/about" className="nav-link">About</Link>
           <Link to="/contact" className="nav-link">Contact</Link>
         </nav>
 
         <div className="hidden md:flex items-center space-x-4">
-          <button className="btn-ghost flex items-center space-x-2">
+          <Link to="/search" className="btn-ghost flex items-center space-x-2">
             <Search size={18} />
             <span>Search</span>
-          </button>
-          <button className="btn-primary">List Property</button>
+          </Link>
+          <Link to="/post-property" className="btn-primary">List Property</Link>
         </div>
 
         {/* Mobile Navigation Toggle */}
@@ -55,7 +86,7 @@ const Navbar = () => {
           className="md:hidden p-2 z-50 relative"
           onClick={() => setIsMenuOpen(!isMenuOpen)}
         >
-          {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+          {isMenuOpen ? <X size={24} className="text-white" /> : <Menu size={24} />}
         </button>
 
         {/* Mobile Navigation Menu */}
@@ -67,10 +98,13 @@ const Navbar = () => {
         >
           <nav className="flex flex-col items-center space-y-8 text-white">
             <Link to="/" className="text-2xl font-medium" onClick={() => setIsMenuOpen(false)}>Home</Link>
-            <Link to="/properties" className="text-2xl font-medium" onClick={() => setIsMenuOpen(false)}>Properties</Link>
+            <Link to="/search" className="text-2xl font-medium" onClick={() => setIsMenuOpen(false)}>Properties</Link>
+            <Link to="/blog" className="text-2xl font-medium" onClick={() => setIsMenuOpen(false)}>Blog</Link>
             <Link to="/about" className="text-2xl font-medium" onClick={() => setIsMenuOpen(false)}>About</Link>
             <Link to="/contact" className="text-2xl font-medium" onClick={() => setIsMenuOpen(false)}>Contact</Link>
-            <button className="btn-primary mt-4 w-40">List Property</button>
+            <Link to="/post-property" className="btn-primary mt-4 w-40" onClick={() => setIsMenuOpen(false)}>
+              List Property
+            </Link>
           </nav>
         </div>
       </div>

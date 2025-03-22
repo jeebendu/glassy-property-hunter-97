@@ -2,10 +2,11 @@
 import React from 'react';
 import Navbar from '@/components/Navbar';
 import Hero from '@/components/Hero';
-import PropertyFilters from '@/components/PropertyFilters';
 import FeaturedProperties from '@/components/FeaturedProperties';
 import Footer from '@/components/Footer';
 import { useAnimationOnScroll } from '@/lib/animations';
+import TopCities from '@/components/TopCities';
+import BlogSection from '@/components/BlogSection';
 
 const Index = () => {
   const aboutAnimation = useAnimationOnScroll('up');
@@ -19,26 +20,20 @@ const Index = () => {
       {/* Featured Properties Section */}
       <section className="py-16">
         <div className="container-custom">
-          <div className="flex flex-col lg:flex-row gap-8">
-            <div className="w-full lg:w-1/4">
-              <PropertyFilters />
-            </div>
-            
-            <div className="w-full lg:w-3/4">
-              <div className="mb-10">
-                <h2 className="section-title">Discover Our Properties</h2>
-                <p className="section-subtitle">Find the perfect property that suits your needs</p>
-              </div>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                {/* Property cards will be rendered here */}
-              </div>
-            </div>
+          <div className="mb-10">
+            <h2 className="section-title">Discover Our Properties</h2>
+            <p className="section-subtitle">Find the perfect property that suits your needs</p>
           </div>
+          
+          <FeaturedProperties />
         </div>
       </section>
       
-      <FeaturedProperties />
+      {/* Top Cities Section */}
+      <TopCities />
+      
+      {/* Blog Section */}
+      <BlogSection />
       
       {/* About Section */}
       <section className="py-24 bg-white">
