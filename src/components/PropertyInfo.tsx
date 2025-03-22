@@ -1,322 +1,264 @@
 
 import React from 'react';
+import { Property } from '@/lib/data';
+import { 
+  Bed, 
+  Bath, 
+  Home, 
+  Maximize, 
+  Calendar, 
+  CheckCircle2, 
+  Building, 
+  Parking, 
+  DollarSign, 
+  CircleDollarSign,
+  CreditCard,
+  ArrowUpRight,
+  ArrowDownRight,
+  Compass,
+  Building2,
+  Clock,
+  Users,
+  User,
+  BadgeCheck,
+  Check
+} from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Share, Printer } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 
 interface PropertyInfoProps {
-  property: {
-    id: string;
-    title: string;
-    address: string;
-    price: number;
-    bedrooms: number;
-    bathrooms: number;
-    squareFeet: number;
-    type: string;
-    status: string;
-    bhk?: string;
-    balcony?: string;
-    furnishType?: string;
-    floorNo?: string;
-    coveredParking?: string;
-    monthlyRent?: string;
-    maintenanceCharges?: string;
-    securityDeposit?: string;
-    builtUpArea?: string;
-    carpetArea?: string;
-    parkingCharges?: string;
-    totalFloors?: string;
-    nearbyLandmarks?: string;
-    facing?: string;
-    servantRoom?: string;
-    agencyName?: string;
-    brokerNegotiable?: string;
-    availableFrom?: string;
-    preferredTenantType?: string;
-    category?: string;
-    flatFurnishings?: string;
-    lockInPeriod?: string;
-    chargeBrokerage?: string;
-    rearId?: string;
-    images: string[];
-    description: string;
-    agent: {
-      name: string;
-      phone: string;
-      email: string;
-      image: string;
-    };
-    amenities: string[];
-    yearBuilt: number;
-  }
+  property: Property;
 }
-
-const formatPrice = (price: number) => {
-  return new Intl.NumberFormat('en-IN', {
-    style: 'currency',
-    currency: 'INR',
-    maximumFractionDigits: 0,
-  }).format(price);
-};
 
 const PropertyInfo: React.FC<PropertyInfoProps> = ({ property }) => {
   return (
-    <div className="mt-6">
-      {/* Property Address & BHK */}
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold mb-2">{property.title}</h1>
-        <p className="text-muted-foreground mb-4">{property.address}</p>
-        
-        {/* Key Info */}
-        <div className="flex flex-wrap gap-6 mb-4">
-          <div className="flex items-center">
-            <span className="font-semibold">{property.bedrooms} Bedrooms</span>
-          </div>
-          <div className="flex items-center">
-            <span className="font-semibold">{property.bathrooms} Bathrooms</span>
-          </div>
-          <div className="flex items-center">
-            <span className="font-semibold">{property.bhk || `${property.bedrooms} BHK`}</span>
-          </div>
-          <div className="flex items-center">
-            <span className="font-semibold">{property.builtUpArea || property.squareFeet} BuiltUpArea Sq ft</span>
-          </div>
-        </div>
-        
-        {/* Share & Print Buttons */}
-        <div className="flex gap-3 mb-6">
-          <Button className="flex items-center gap-2 bg-emerald-500 text-white hover:bg-emerald-600">
-            <Share size={18} />
-            <span>Share</span>
-          </Button>
-          <Button variant="outline" className="flex items-center gap-2">
-            <Printer size={18} />
-            <span>Print</span>
-          </Button>
-        </div>
-      </div>
-      
-      {/* Property Tabs */}
-      <Tabs defaultValue="about" className="mb-10">
-        <TabsList className="border-b mb-6 w-full justify-start">
-          <TabsTrigger value="about" className="text-base">ABOUT</TabsTrigger>
-          <TabsTrigger value="feature" className="text-base">FEATURE</TabsTrigger>
-          <TabsTrigger value="gallery" className="text-base">GALLERY</TabsTrigger>
-          <TabsTrigger value="location" className="text-base">LOCATION</TabsTrigger>
-          <TabsTrigger value="nearby" className="text-base">NEAR BY</TabsTrigger>
+    <div className="space-y-6">
+      <Tabs defaultValue="about">
+        <TabsList className="w-full grid grid-cols-5">
+          <TabsTrigger value="about">ABOUT</TabsTrigger>
+          <TabsTrigger value="features">FEATURES</TabsTrigger>
+          <TabsTrigger value="gallery">GALLERY</TabsTrigger>
+          <TabsTrigger value="location">LOCATION</TabsTrigger>
+          <TabsTrigger value="nearby">NEAR BY</TabsTrigger>
         </TabsList>
         
-        {/* About Tab */}
-        <TabsContent value="about" className="pt-2">
-          <h2 className="text-2xl font-bold mb-6">Property Details</h2>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-5">
-            <div className="flex justify-between border-b pb-2">
-              <span className="text-muted-foreground">Property Type :</span>
-              <span className="font-medium">{property.type}</span>
+        <TabsContent value="about" className="mt-6">
+          <div className="space-y-6">
+            <div>
+              <h3 className="text-xl font-semibold mb-3">Description</h3>
+              <p className="text-muted-foreground">
+                {property.description}
+              </p>
             </div>
             
-            <div className="flex justify-between border-b pb-2">
-              <span className="text-muted-foreground">Looking For :</span>
-              <span className="font-medium">{property.status === "For Rent" ? "Rent" : "Sale"}</span>
+            <div>
+              <h3 className="text-xl font-semibold mb-3">Property Details</h3>
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                <div className="flex items-center space-x-3">
+                  <Bed className="h-5 w-5 text-primary" />
+                  <span>{property.bedrooms} Bedrooms</span>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <Bath className="h-5 w-5 text-primary" />
+                  <span>{property.bathrooms} Bathrooms</span>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <Home className="h-5 w-5 text-primary" />
+                  <span>{property.bhk || `${property.bedrooms} BHK`}</span>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <Maximize className="h-5 w-5 text-primary" />
+                  <span>{property.builtUpArea || `${property.squareFeet} Sq. ft.`} Built-up Area</span>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <Calendar className="h-5 w-5 text-primary" />
+                  <span>Built in {property.yearBuilt}</span>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <Building className="h-5 w-5 text-primary" />
+                  <span>{property.type}</span>
+                </div>
+                {property.balcony && (
+                  <div className="flex items-center space-x-3">
+                    <ArrowUpRight className="h-5 w-5 text-primary" />
+                    <span>{property.balcony}</span>
+                  </div>
+                )}
+                {property.furnishType && (
+                  <div className="flex items-center space-x-3">
+                    <CheckCircle2 className="h-5 w-5 text-primary" />
+                    <span>{property.furnishType}</span>
+                  </div>
+                )}
+                {property.floorNo && (
+                  <div className="flex items-center space-x-3">
+                    <Building2 className="h-5 w-5 text-primary" />
+                    <span>Floor {property.floorNo}</span>
+                  </div>
+                )}
+                {property.coveredParking && (
+                  <div className="flex items-center space-x-3">
+                    <Parking className="h-5 w-5 text-primary" />
+                    <span>{property.coveredParking} Parking</span>
+                  </div>
+                )}
+                {property.carpetArea && (
+                  <div className="flex items-center space-x-3">
+                    <Maximize className="h-5 w-5 text-primary" />
+                    <span>{property.carpetArea} Carpet Area</span>
+                  </div>
+                )}
+                {property.facing && (
+                  <div className="flex items-center space-x-3">
+                    <Compass className="h-5 w-5 text-primary" />
+                    <span>{property.facing} Facing</span>
+                  </div>
+                )}
+              </div>
             </div>
             
-            <div className="flex justify-between border-b pb-2">
-              <span className="text-muted-foreground">Category :</span>
-              <span className="font-medium">{property.category || "Residential"}</span>
-            </div>
-            
-            <div className="flex justify-between border-b pb-2">
-              <span className="text-muted-foreground">Balcony :</span>
-              <span className="font-medium">{property.balcony || "1 Balcony"}</span>
-            </div>
-            
-            <div className="flex justify-between border-b pb-2">
-              <span className="text-muted-foreground">Bedrooms :</span>
-              <span className="font-medium">{property.bedrooms} Bedroom</span>
-            </div>
-            
-            <div className="flex justify-between border-b pb-2">
-              <span className="text-muted-foreground">Bathrooms :</span>
-              <span className="font-medium">{property.bathrooms} Bathroom</span>
-            </div>
-            
-            <div className="flex justify-between border-b pb-2">
-              <span className="text-muted-foreground">Preferred Tenant Type :</span>
-              <span className="font-medium">{property.preferredTenantType || "Family"}</span>
-            </div>
-            
-            <div className="flex justify-between border-b pb-2">
-              <span className="text-muted-foreground">Furnishing :</span>
-              <span className="font-medium">{property.furnishType || "Semi Furnished"}</span>
-            </div>
-            
-            <div className="flex justify-between border-b pb-2">
-              <span className="text-muted-foreground">BHK :</span>
-              <span className="font-medium">{property.bhk || `${property.bedrooms} BHK`}</span>
-            </div>
-            
-            <div className="flex justify-between border-b pb-2">
-              <span className="text-muted-foreground">Floor No :</span>
-              <span className="font-medium">{property.floorNo || "3"}</span>
-            </div>
-            
-            <div className="flex justify-between border-b pb-2">
-              <span className="text-muted-foreground">Covered Parking :</span>
-              <span className="font-medium">{property.coveredParking || "1"}</span>
-            </div>
-            
-            <div className="flex justify-between border-b pb-2">
-              <span className="text-muted-foreground">Monthly Rent :</span>
-              <span className="font-medium">{property.monthlyRent || "₹20,000.00"}</span>
-            </div>
-            
-            <div className="flex justify-between border-b pb-2">
-              <span className="text-muted-foreground">Maintenance Charges :</span>
-              <span className="font-medium">{property.maintenanceCharges || "₹0"}</span>
-            </div>
-            
-            <div className="flex justify-between border-b pb-2">
-              <span className="text-muted-foreground">Security Deposit :</span>
-              <span className="font-medium">{property.securityDeposit || "₹2"}</span>
-            </div>
-            
-            <div className="flex justify-between border-b pb-2">
-              <span className="text-muted-foreground">Built Up Area :</span>
-              <span className="font-medium">{property.builtUpArea || `${property.squareFeet} Sq. ft.`}</span>
-            </div>
-            
-            <div className="flex justify-between border-b pb-2">
-              <span className="text-muted-foreground">Carpet Area :</span>
-              <span className="font-medium">{property.carpetArea || "805 Sq. ft."}</span>
-            </div>
-            
-            <div className="flex justify-between border-b pb-2">
-              <span className="text-muted-foreground">Parking Charges :</span>
-              <span className="font-medium">{property.parkingCharges || "₹0"}</span>
-            </div>
-            
-            <div className="flex justify-between border-b pb-2">
-              <span className="text-muted-foreground">Total Floors :</span>
-              <span className="font-medium">{property.totalFloors || "14"}</span>
-            </div>
-            
-            <div className="flex justify-between border-b pb-2">
-              <span className="text-muted-foreground">Nearby Landmarks :</span>
-              <span className="font-medium">{property.nearbyLandmarks || "TCS"}</span>
-            </div>
-            
-            <div className="flex justify-between border-b pb-2">
-              <span className="text-muted-foreground">Facing :</span>
-              <span className="font-medium">{property.facing || "East"}</span>
-            </div>
-            
-            <div className="flex justify-between border-b pb-2">
-              <span className="text-muted-foreground">Servant Room :</span>
-              <span className="font-medium">{property.servantRoom || "No"}</span>
-            </div>
-            
-            <div className="flex justify-between border-b pb-2">
-              <span className="text-muted-foreground">Agency Name :</span>
-              <span className="font-medium">{property.agencyName || "Navnath"}</span>
-            </div>
-            
-            <div className="flex justify-between border-b pb-2">
-              <span className="text-muted-foreground">Broker Negotiable :</span>
-              <span className="font-medium">{property.brokerNegotiable || "Yes"}</span>
-            </div>
-            
-            <div className="flex justify-between border-b pb-2">
-              <span className="text-muted-foreground">Available From :</span>
-              <span className="font-medium">{property.availableFrom || "09-01-2025"}</span>
-            </div>
-            
-            <div className="flex justify-between border-b pb-2">
-              <span className="text-muted-foreground">Charge Brokerage :</span>
-              <span className="font-medium">{property.chargeBrokerage || "-"}</span>
-            </div>
-            
-            <div className="flex justify-between border-b pb-2">
-              <span className="text-muted-foreground">LockIn Period :</span>
-              <span className="font-medium">{property.lockInPeriod || "-"}</span>
-            </div>
-            
-            <div className="flex justify-between border-b pb-2">
-              <span className="text-muted-foreground">Flat Furnishings :</span>
-              <span className="font-medium">{property.flatFurnishings || "-"}</span>
-            </div>
-            
-            {property.rearId && (
-              <div className="flex justify-between border-b pb-2">
-                <span className="text-muted-foreground">Rear ID :</span>
-                <span className="font-medium">{property.rearId}</span>
+            {property.status === "For Rent" && (
+              <div>
+                <h3 className="text-xl font-semibold mb-3">Rental Details</h3>
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                  {property.monthlyRent && (
+                    <div className="flex items-center space-x-3">
+                      <DollarSign className="h-5 w-5 text-primary" />
+                      <span>Rent: {property.monthlyRent}</span>
+                    </div>
+                  )}
+                  {property.securityDeposit && (
+                    <div className="flex items-center space-x-3">
+                      <CircleDollarSign className="h-5 w-5 text-primary" />
+                      <span>Security: {property.securityDeposit}</span>
+                    </div>
+                  )}
+                  {property.maintenanceCharges && (
+                    <div className="flex items-center space-x-3">
+                      <CreditCard className="h-5 w-5 text-primary" />
+                      <span>Maintenance: {property.maintenanceCharges}</span>
+                    </div>
+                  )}
+                  {property.parkingCharges && (
+                    <div className="flex items-center space-x-3">
+                      <Parking className="h-5 w-5 text-primary" />
+                      <span>Parking: {property.parkingCharges}</span>
+                    </div>
+                  )}
+                  {property.availableFrom && (
+                    <div className="flex items-center space-x-3">
+                      <Clock className="h-5 w-5 text-primary" />
+                      <span>Available: {property.availableFrom}</span>
+                    </div>
+                  )}
+                  {property.preferredTenantType && (
+                    <div className="flex items-center space-x-3">
+                      <Users className="h-5 w-5 text-primary" />
+                      <span>Preferred: {property.preferredTenantType}</span>
+                    </div>
+                  )}
+                </div>
               </div>
             )}
-          </div>
-        </TabsContent>
-        
-        {/* Feature Tab */}
-        <TabsContent value="feature">
-          <h2 className="text-2xl font-bold mb-6">Features</h2>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-            {property.amenities.map((amenity, index) => (
-              <div key={index} className="flex items-center">
-                <div className="h-2 w-2 rounded-full bg-primary mr-2"></div>
-                <span>{amenity}</span>
+          
+            <div>
+              <h3 className="text-xl font-semibold mb-4">Amenities</h3>
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-y-4">
+                {property.amenities.map((amenity, index) => (
+                  <div key={index} className="flex items-center space-x-2">
+                    <div className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/10">
+                      <Check size={16} className="text-primary" />
+                    </div>
+                    <span>{amenity}</span>
+                  </div>
+                ))}
               </div>
-            ))}
+            </div>
+            
+            <div>
+              <h3 className="text-xl font-semibold mb-3">Property Owner/Agent</h3>
+              <div className="flex items-center space-x-3">
+                <User className="h-5 w-5 text-primary" />
+                <span>
+                  {property.agencyName ? (
+                    <>{property.agencyName} <BadgeCheck className="inline h-4 w-4 text-blue-500" /></>
+                  ) : 'Owner'}
+                </span>
+              </div>
+              {property.brokerNegotiable && (
+                <div className="flex items-center space-x-3 mt-2">
+                  <CheckCircle2 className="h-5 w-5 text-primary" />
+                  <span>Broker Negotiable: {property.brokerNegotiable}</span>
+                </div>
+              )}
+            </div>
           </div>
         </TabsContent>
         
-        {/* Gallery Tab */}
-        <TabsContent value="gallery">
-          <h2 className="text-2xl font-bold mb-6">Gallery</h2>
+        <TabsContent value="features" className="mt-6">
+          <div className="space-y-6">
+            <h3 className="text-xl font-semibold mb-4">Features</h3>
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-y-4">
+              {[...property.amenities, 'Air Conditioning', '24/7 Security', 'Garden', 'Gym', 'Swimming Pool'].map((feature, index) => (
+                <div key={index} className="flex items-center space-x-2">
+                  <div className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/10">
+                    <Check size={16} className="text-primary" />
+                  </div>
+                  <span>{feature}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </TabsContent>
+        
+        <TabsContent value="gallery" className="mt-6">
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
             {property.images.map((image, index) => (
-              <img 
-                key={index}
-                src={image}
-                alt={`Property ${index + 1}`}
-                className="w-full h-48 object-cover rounded-lg"
-              />
+              <div key={index} className="aspect-square rounded-lg overflow-hidden">
+                <img 
+                  src={image} 
+                  alt={`Property ${index + 1}`} 
+                  className="w-full h-full object-cover hover:scale-110 transition-transform duration-300"
+                />
+              </div>
             ))}
           </div>
         </TabsContent>
         
-        {/* Location Tab */}
-        <TabsContent value="location">
-          <h2 className="text-2xl font-bold mb-6">Location</h2>
-          <div className="border rounded-lg overflow-hidden h-64 bg-gray-100">
-            <div className="w-full h-full bg-gray-200 flex items-center justify-center">
-              <p className="text-gray-500">Map will be displayed here</p>
+        <TabsContent value="location" className="mt-6">
+          <div className="space-y-4">
+            <h3 className="text-xl font-semibold">Location</h3>
+            <p className="text-muted-foreground">{property.address}</p>
+            <div className="h-[300px] w-full bg-gray-200 rounded-lg flex items-center justify-center">
+              <p className="text-muted-foreground">Map will be displayed here</p>
             </div>
           </div>
         </TabsContent>
         
-        {/* Nearby Tab */}
-        <TabsContent value="nearby">
-          <h2 className="text-2xl font-bold mb-6">Nearby Places</h2>
+        <TabsContent value="nearby" className="mt-6">
           <div className="space-y-4">
-            <div className="flex items-start">
-              <div className="h-2 w-2 rounded-full bg-primary mr-2 mt-2"></div>
-              <div>
-                <h3 className="font-medium">TCS</h3>
-                <p className="text-sm text-muted-foreground">1.2 km away</p>
+            <h3 className="text-xl font-semibold">Nearby Landmarks</h3>
+            <p className="text-muted-foreground">{property.nearbyLandmarks || 'Information not available'}</p>
+            <div className="space-y-3">
+              <div className="flex justify-between p-3 border-b">
+                <span>Schools</span>
+                <span className="text-muted-foreground">1.2 km</span>
               </div>
-            </div>
-            <div className="flex items-start">
-              <div className="h-2 w-2 rounded-full bg-primary mr-2 mt-2"></div>
-              <div>
-                <h3 className="font-medium">Rajiv Gandhi Infotech Park</h3>
-                <p className="text-sm text-muted-foreground">0.5 km away</p>
+              <div className="flex justify-between p-3 border-b">
+                <span>Hospital</span>
+                <span className="text-muted-foreground">2.5 km</span>
               </div>
-            </div>
-            <div className="flex items-start">
-              <div className="h-2 w-2 rounded-full bg-primary mr-2 mt-2"></div>
-              <div>
-                <h3 className="font-medium">Megapolis Shopping Mall</h3>
-                <p className="text-sm text-muted-foreground">1.5 km away</p>
+              <div className="flex justify-between p-3 border-b">
+                <span>Shopping Mall</span>
+                <span className="text-muted-foreground">3.1 km</span>
+              </div>
+              <div className="flex justify-between p-3 border-b">
+                <span>Metro Station</span>
+                <span className="text-muted-foreground">0.8 km</span>
+              </div>
+              <div className="flex justify-between p-3 border-b">
+                <span>Airport</span>
+                <span className="text-muted-foreground">15.6 km</span>
               </div>
             </div>
           </div>
