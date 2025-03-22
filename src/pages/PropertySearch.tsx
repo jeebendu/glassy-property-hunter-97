@@ -12,6 +12,7 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogTrigger
 } from "@/components/ui/dialog";
 import LocationSelector from '@/components/LocationSelector';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
