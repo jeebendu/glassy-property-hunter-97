@@ -33,12 +33,12 @@ const App = () => {
           <Routes>
             <Route path="/" element={<Index openAuthDialog={openAuthDialog} />} />
             <Route path="/property/:id" element={<PropertyDetails openAuthDialog={openAuthDialog} />} />
-            <Route path="/search" element={<PropertySearch openAuthDialog={openAuthDialog} />} />
-            <Route path="/blog" element={<Blog openAuthDialog={openAuthDialog} />} />
-            <Route path="/post-property" element={<PostProperty openAuthDialog={openAuthDialog} />} />
-            <Route path="/profile" element={<UserProfile openAuthDialog={openAuthDialog} />} />
-            <Route path="/my-properties" element={<UserProfile openAuthDialog={openAuthDialog} />} />
-            <Route path="/saved-properties" element={<UserProfile openAuthDialog={openAuthDialog} />} />
+            <Route path="/search" element={<PropertySearch />} />
+            <Route path="/blog" element={<Blog />} />
+            <Route path="/post-property" element={<PostProperty />} />
+            <Route path="/profile" element={<UserProfile />} />
+            <Route path="/my-properties" element={<UserProfile />} />
+            <Route path="/saved-properties" element={<UserProfile />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

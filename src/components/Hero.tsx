@@ -59,7 +59,7 @@ const Hero = () => {
       </div>
 
       {/* Hero Content */}
-      <div className="container-custom relative z-10 pt-24 md:pt-0">
+      <div className="container-custom relative z-10 pt-28 md:pt-0">
         <div className="max-w-4xl mx-auto text-white text-center md:text-left">
           <h4 
             ref={titleAnimation.ref}
@@ -71,17 +71,10 @@ const Hero = () => {
           
           <h1 
             ref={subtitleAnimation.ref}
-            className={`${subtitleAnimation.animationClass} text-2xl md:text-4xl lg:text-5xl font-bold mb-4 leading-tight`}
+            className={`${subtitleAnimation.animationClass} text-xl md:text-3xl lg:text-4xl font-bold mb-4 leading-tight`}
           >
             Properties to {activeTab} in {selectedLocation}
           </h1>
-          
-          <p 
-            ref={searchAnimation.ref}
-            className={`${searchAnimation.animationClass} text-base md:text-xl text-white/80 mb-4 mx-auto md:mx-0 max-w-2xl`}
-          >
-            10K+ listings added daily and 63K+ total verified
-          </p>
 
           {/* Location Selector Dialog */}
           <Dialog open={showLocationDialog} onOpenChange={setShowLocationDialog}>
@@ -93,17 +86,36 @@ const Hero = () => {
             </DialogContent>
           </Dialog>
 
+          {/* Mobile Tabs - Vertical Display */}
+          <div className="md:hidden flex justify-center overflow-x-auto mt-4 mb-4">
+            <div className="flex space-x-2">
+              {['buy', 'rent', 'pg', 'commercial', 'plots'].map((tab) => (
+                <button
+                  key={tab}
+                  className={`px-3 py-2 font-medium rounded-full transition-colors whitespace-nowrap min-w-[70px] ${
+                    activeTab === tab 
+                      ? 'bg-primary text-white' 
+                      : 'bg-white/20 text-white hover:bg-white/30'
+                  }`}
+                  onClick={() => setActiveTab(tab)}
+                >
+                  {tab.toUpperCase()}
+                </button>
+              ))}
+            </div>
+          </div>
+
           {/* Search Form - Desktop */}
           <div
             ref={searchAnimation.ref}
             className={`${searchAnimation.animationClass} bg-white rounded-2xl shadow-xl overflow-hidden max-w-5xl mt-10 mx-auto md:mx-0 hidden md:block`}
           >
             {/* Tabs - Center on mobile and desktop */}
-            <div className="flex justify-center border-b">
+            <div className="flex justify-start overflow-x-auto scrollbar-hide">
               {['buy', 'rent', 'commercial', 'pg/co-living', 'plots'].map((tab) => (
                 <button
                   key={tab}
-                  className={`px-6 py-4 font-medium transition-colors min-w-24 ${
+                  className={`px-4 md:px-6 py-4 font-medium transition-colors whitespace-nowrap ${
                     activeTab === tab 
                       ? 'text-primary border-b-2 border-primary' 
                       : 'text-gray-500 hover:text-gray-800'
@@ -150,31 +162,12 @@ const Hero = () => {
               <div className="px-4 py-3">
                 <Button
                   type="submit"
-                  className="bg-emerald-500 hover:bg-emerald-600 text-white font-semibold rounded-full px-8"
+                  className="bg-primary hover:bg-primary/90 text-white font-semibold rounded-full px-8"
                 >
                   Search
                 </Button>
               </div>
             </form>
-          </div>
-
-          {/* Mobile Tabs - Vertical Display */}
-          <div className="md:hidden flex justify-center overflow-x-auto mt-4 mb-4">
-            <div className="flex space-x-2">
-              {['buy', 'rent', 'pg', 'commercial', 'plots'].map((tab) => (
-                <button
-                  key={tab}
-                  className={`px-3 py-2 font-medium rounded-full transition-colors whitespace-nowrap min-w-14 ${
-                    activeTab === tab 
-                      ? 'bg-primary text-white' 
-                      : 'bg-white/20 text-white hover:bg-white/30'
-                  }`}
-                  onClick={() => setActiveTab(tab)}
-                >
-                  {tab.toUpperCase()}
-                </button>
-              ))}
-            </div>
           </div>
 
           {/* Search Form - Mobile */}
@@ -192,7 +185,7 @@ const Hero = () => {
               />
               <Button
                 type="submit"
-                className="absolute right-1 top-1 bottom-1 rounded-full bg-emerald-500 hover:bg-emerald-600 aspect-square p-0 min-w-12"
+                className="absolute right-1 top-1 bottom-1 rounded-full bg-primary hover:bg-primary/90 aspect-square p-0 min-w-12"
               >
                 <Search size={20} />
               </Button>
@@ -212,8 +205,16 @@ const Hero = () => {
             </div>
           </div>
 
-          {/* App Download Section - Moved up before the app download section */}
-          <div className="mt-10 flex flex-col md:flex-row items-center justify-center md:justify-start gap-4">
+          {/* Stats text moved up before app download section */}
+          <p 
+            ref={searchAnimation.ref}
+            className={`${searchAnimation.animationClass} text-base md:text-xl text-white/80 mt-8 mx-auto md:mx-0 max-w-2xl`}
+          >
+            10K+ listings added daily and 63K+ total verified
+          </p>
+
+          {/* App Download Section */}
+          <div className="mt-6 flex flex-col md:flex-row items-center justify-center md:justify-start gap-4">
             <p className="text-white/90 font-medium">Download our app:</p>
             <div className="flex space-x-4">
               <a href="#" className="flex items-center bg-black/60 hover:bg-black/80 text-white px-4 py-2 rounded-lg transition-colors">

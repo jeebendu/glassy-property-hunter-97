@@ -7,8 +7,14 @@ import { properties } from '@/lib/data';
 import { ChevronLeft, ChevronRight, Heart } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import PropertyInfo from '@/components/PropertyInfo';
+import ShareButton from '@/components/ShareButton';
+import MobileContactBar from '@/components/MobileContactBar';
 
-const PropertyDetails = () => {
+interface PropertyDetailsProps {
+  openAuthDialog?: () => void;
+}
+
+const PropertyDetails = ({ openAuthDialog = () => {} }: PropertyDetailsProps) => {
   const { id } = useParams<{ id: string }>();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isFavorite, setIsFavorite] = useState(false);
@@ -60,7 +66,7 @@ const PropertyDetails = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navbar />
+      <Navbar openAuthDialog={openAuthDialog} />
       
       <div className="pt-24 pb-16">
         <div className="container-custom">
@@ -90,6 +96,7 @@ const PropertyDetails = () => {
                   maximumFractionDigits: 0,
                 }).format(property.price)}
               </span>
+              <ShareButton iconOnly className="h-10 w-10 glass rounded-full" />
               <button
                 className={cn(
                   "h-10 w-10 glass rounded-full flex items-center justify-center transition-all duration-300 hover:bg-white",
@@ -261,6 +268,14 @@ const PropertyDetails = () => {
           </div>
         </div>
       </div>
+      
+      {/* Mobile Contact Bar */}
+      <MobileContactBar 
+        agent={property.agent}
+        propertyId={property.id}
+        propertyTitle={property.title}
+        openAuthDialog={openAuthDialog}
+      />
       
       <Footer />
     </div>

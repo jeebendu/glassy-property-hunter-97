@@ -171,32 +171,6 @@ const PropertyFilters = ({ onFilterChange }: PropertyFiltersProps) => {
             </button>
           )}
         </div>
-        
-        {/* Selected filters display */}
-        {Object.keys(selectedFilters).length > 0 && (
-          <div className="flex flex-wrap gap-2 mt-2">
-            {Object.entries(selectedFilters).map(([key, value]) => (
-              <div 
-                key={key} 
-                className="bg-primary/10 text-primary text-xs rounded-full px-3 py-1.5 flex items-center"
-              >
-                <span className="capitalize mr-1">
-                  {key === "priceRange" 
-                    ? `Price: ${formatPrice((value as number[])[0])} - ${formatPrice((value as number[])[1])}` 
-                    : key === "carpetArea"
-                      ? `Area: ${formatArea((value as number[])[0])} - ${formatArea((value as number[])[1])}`
-                      : `${key.replace(/([A-Z])/g, ' $1').trim()}: ${value}`}
-                </span>
-                <button 
-                  onClick={() => removeFilter(key)}
-                  className="ml-1 rounded-full hover:bg-primary/20 p-0.5"
-                >
-                  <X size={12} />
-                </button>
-              </div>
-            ))}
-          </div>
-        )}
       </div>
 
       {/* Filters Container */}
@@ -219,32 +193,6 @@ const PropertyFilters = ({ onFilterChange }: PropertyFiltersProps) => {
             )}
           </div>
           
-          {/* Selected filters display - desktop */}
-          {Object.keys(selectedFilters).length > 0 && (
-            <div className="hidden lg:flex flex-wrap gap-2 mb-6">
-              {Object.entries(selectedFilters).map(([key, value]) => (
-                <div 
-                  key={key} 
-                  className="bg-primary/10 text-primary text-xs rounded-full px-3 py-1.5 flex items-center"
-                >
-                  <span className="capitalize mr-1">
-                    {key === "priceRange" 
-                      ? `Price: ${formatPrice((value as number[])[0])} - ${formatPrice((value as number[])[1])}` 
-                      : key === "carpetArea"
-                        ? `Area: ${formatArea((value as number[])[0])} - ${formatArea((value as number[])[1])}`
-                        : `${key.replace(/([A-Z])/g, ' $1').trim()}: ${value}`}
-                  </span>
-                  <button 
-                    onClick={() => removeFilter(key)}
-                    className="ml-1 rounded-full hover:bg-primary/20 p-0.5"
-                  >
-                    <X size={12} />
-                  </button>
-                </div>
-              ))}
-            </div>
-          )}
-          
           {/* Property Type Filter */}
           <div className="mb-6">
             <h4 className="text-sm font-medium mb-3">Property Type</h4>
@@ -261,7 +209,7 @@ const PropertyFilters = ({ onFilterChange }: PropertyFiltersProps) => {
                 defaultValue={[0, 10000000]} 
                 max={10000000} 
                 step={100000} 
-                value={activeFilters.priceRange as number[]}
+                value={activeFilters.priceRange}
                 onValueChange={(value) => handleFilterChange("priceRange", value)}
                 className="mt-6"
               />
@@ -283,7 +231,7 @@ const PropertyFilters = ({ onFilterChange }: PropertyFiltersProps) => {
                 defaultValue={[0, 10000]} 
                 max={10000} 
                 step={100} 
-                value={activeFilters.carpetArea as number[]}
+                value={activeFilters.carpetArea}
                 onValueChange={(value) => handleFilterChange("carpetArea", value)}
                 className="mt-6"
               />
