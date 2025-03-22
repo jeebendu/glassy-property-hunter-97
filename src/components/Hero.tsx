@@ -1,13 +1,16 @@
 
 import React, { useState } from 'react';
-import { Search, MapPin, Home, ArrowRight } from 'lucide-react';
+import { Search, MapPin, ChevronDown } from 'lucide-react';
 import { propertyTypes, statusOptions } from '@/lib/data';
 import { useAnimationOnScroll } from '@/lib/animations';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 
 const Hero = () => {
   const [searchTerm, setSearchTerm] = useState('');
+  const [selectedLocation, setSelectedLocation] = useState('Bengaluru');
   const [propertyType, setPropertyType] = useState('all');
-  const [status, setStatus] = useState('all');
+  const [activeTab, setActiveTab] = useState('buy');
   
   const titleAnimation = useAnimationOnScroll('up');
   const subtitleAnimation = useAnimationOnScroll('up', 0.1, 200);
@@ -15,7 +18,7 @@ const Hero = () => {
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log({ searchTerm, propertyType, status });
+    console.log({ searchTerm, propertyType, location: selectedLocation, type: activeTab });
     // Implement search functionality
   };
 
@@ -48,71 +51,84 @@ const Hero = () => {
             ref={subtitleAnimation.ref}
             className={`${subtitleAnimation.animationClass} text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight`}
           >
-            Discover the Perfect Property for Your Lifestyle
+            Properties to buy in {selectedLocation}
           </h1>
           
           <p 
             ref={searchAnimation.ref}
-            className={`${searchAnimation.animationClass} text-lg md:text-xl text-white/80 mb-10 max-w-2xl`}
+            className={`${searchAnimation.animationClass} text-lg md:text-xl text-white/80 mb-4 max-w-2xl`}
           >
-            Explore our curated selection of premium properties, from urban apartments to luxurious estates, tailored to your unique preferences.
+            10K+ listings added daily and 63K+ total verified
           </p>
 
           {/* Search Form */}
-          <form 
-            onSubmit={handleSearch}
-            className={`${searchAnimation.animationClass} hero-search flex flex-col md:flex-row items-center p-2 mb-8 md:mb-0`}
+          <div
+            ref={searchAnimation.ref}
+            className={`${searchAnimation.animationClass} bg-white rounded-2xl shadow-xl overflow-hidden max-w-5xl mt-10`}
           >
-            <div className="flex items-center flex-1 px-4 py-2">
-              <MapPin size={20} className="text-primary mr-2 flex-shrink-0" />
-              <input
-                type="text"
-                placeholder="Enter location, neighborhood, or address"
-                className="search-input text-foreground"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
+            {/* Tabs */}
+            <div className="flex border-b">
+              {['buy', 'rent', 'commercial', 'pg/co-living', 'plots'].map((tab) => (
+                <button
+                  key={tab}
+                  className={`px-6 py-4 font-medium transition-colors ${
+                    activeTab === tab 
+                      ? 'text-primary border-b-2 border-primary' 
+                      : 'text-gray-500 hover:text-gray-800'
+                  }`}
+                  onClick={() => setActiveTab(tab)}
+                >
+                  {tab.toUpperCase()}
+                </button>
+              ))}
             </div>
-            
-            <div className="flex items-center md:border-l border-gray-200 px-4 py-2">
-              <Home size={20} className="text-primary mr-2 flex-shrink-0" />
-              <select
-                className="search-input bg-transparent text-foreground"
-                value={propertyType}
-                onChange={(e) => setPropertyType(e.target.value)}
-              >
-                {propertyTypes.map((type) => (
-                  <option key={type.value} value={type.value}>
-                    {type.label}
-                  </option>
-                ))}
-              </select>
-            </div>
-            
-            <div className="flex items-center md:border-l border-gray-200 px-4 py-2">
-              <select
-                className="search-input bg-transparent text-foreground"
-                value={status}
-                onChange={(e) => setStatus(e.target.value)}
-              >
-                {statusOptions.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
-            </div>
-            
-            <button
-              type="submit"
-              className="btn-primary flex items-center space-x-2 px-6 py-3 m-2"
-            >
-              <Search size={20} />
-              <span>Search</span>
-            </button>
-          </form>
 
-          {/* Stats */}
+            {/* Search Inputs */}
+            <form onSubmit={handleSearch} className="flex flex-col md:flex-row">
+              <div className="flex items-center border-r border-gray-200 px-4 py-3 w-full md:w-1/3">
+                <div className="relative w-full cursor-pointer">
+                  <div className="flex items-center">
+                    <MapPin size={20} className="text-gray-400 mr-3" />
+                    <div className="flex-1">{selectedLocation}</div>
+                    <ChevronDown size={18} className="text-gray-400 ml-2" />
+                  </div>
+                </div>
+              </div>
+              
+              <div className="flex-1 px-4 py-3">
+                <Input
+                  type="text"
+                  placeholder="Search for locality, landmark, project, or builder"
+                  className="border-none focus:ring-0 text-foreground h-full"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                />
+              </div>
+              
+              <div className="px-4 py-3">
+                <Button
+                  type="submit"
+                  className="bg-emerald-500 hover:bg-emerald-600 text-white font-semibold rounded-full px-8"
+                >
+                  Search
+                </Button>
+              </div>
+            </form>
+          </div>
+
+          {/* Continue last search */}
+          <div className="mt-4 flex items-center space-x-4">
+            <button className="text-white hover:text-primary transition-colors">
+              Continue last search
+            </button>
+            
+            <div className="bg-blue-400/30 text-white px-6 py-2 rounded-full flex items-center">
+              <span>Bengaluru, Karnataka,...</span>
+              <ChevronDown size={18} className="ml-2" />
+            </div>
+          </div>
+
+          {/* Stats (Hidden on mobile for cleaner UI) */}
           <div 
             className="hidden md:flex items-center space-x-12 mt-16"
             ref={searchAnimation.ref}
@@ -131,12 +147,6 @@ const Hero = () => {
             </div>
           </div>
         </div>
-      </div>
-
-      {/* Scroll Down Indicator */}
-      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex flex-col items-center text-white z-10 animate-pulse">
-        <p className="text-sm mb-2">Scroll Down</p>
-        <ArrowRight size={20} className="rotate-90" />
       </div>
     </section>
   );
