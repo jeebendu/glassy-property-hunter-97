@@ -115,7 +115,7 @@ const Hero = () => {
               {['buy', 'rent', 'commercial', 'pg/co-living', 'plots'].map((tab) => (
                 <button
                   key={tab}
-                  className={`px-4 md:px-6 py-4 font-medium transition-colors whitespace-nowrap ${
+                  className={`px-3 md:px-4 py-3 text-sm font-medium transition-colors whitespace-nowrap ${
                     activeTab === tab 
                       ? 'text-primary border-b-2 border-primary' 
                       : 'text-gray-500 hover:text-gray-800'

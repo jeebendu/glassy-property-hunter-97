@@ -9,7 +9,7 @@ import ShareButton from './ShareButton';
 interface PropertyCardProps {
   property: any;
   className?: string;
-  index?: number; // Added index as an optional prop
+  index?: number; 
 }
 
 const PropertyCard = ({ property, className, index }: PropertyCardProps) => {

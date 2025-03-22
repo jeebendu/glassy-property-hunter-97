@@ -59,7 +59,7 @@ const ShareButton = ({
           onClick={handleShare}
           variant="outline"
           size={iconOnly ? "icon" : "default"}
-          className={className}
+          className={`flex flex-col items-center space-y-1 ${iconOnly ? "" : "mr-2"} ${className}`}
         >
           <Share2 className={iconOnly ? "" : "mr-2"} size={18} />
           {!iconOnly && "Share"}
@@ -71,7 +71,7 @@ const ShareButton = ({
             <Button
               variant="outline"
               size={iconOnly ? "icon" : "default"}
-              className={className}
+              className={`flex flex-col items-center space-y-1 ${iconOnly ? "" : "mr-2"} ${className}`}
             >
               <Share2 className={iconOnly ? "" : "mr-2"} size={18} />
               {!iconOnly && "Share"}

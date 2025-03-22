@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { propertyTypes, priceRanges, bedroomOptions, bathroomOptions, statusOptions } from '@/lib/data';
 import { cn } from '@/lib/utils';
@@ -10,7 +11,7 @@ interface FilterOption {
 }
 
 interface PropertyFiltersProps {
-  onFilterChange: (filters: ActiveFilters) => void;
+  onFilterChange: (filters: any) => void;
 }
 
 // Define additional filter options

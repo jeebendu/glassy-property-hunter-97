@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useLocation, Link } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
@@ -6,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Filter, Grid3X3, LayoutGrid, Search as SearchIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import PropertyFilters from '@/components/PropertyFilters';
-import { properties, cities } from '@/lib/data';
+import { properties } from '@/lib/data';
 import PropertyCard from '@/components/PropertyCard';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
@@ -50,7 +51,7 @@ const PropertySearch = ({ openAuthDialog }: PropertySearchProps) => {
             results = results.filter(property =>
                 property.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
                 property.address.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                property.city.toLowerCase().includes(searchQuery.toLowerCase())
+                property.location?.toLowerCase().includes(searchQuery.toLowerCase())
             );
         }
 
@@ -63,11 +64,11 @@ const PropertySearch = ({ openAuthDialog }: PropertySearchProps) => {
         }
 
         if (activeFilters.beds) {
-            results = results.filter(property => property.beds === parseInt(activeFilters.beds));
+            results = results.filter(property => property.bedrooms === parseInt(activeFilters.beds));
         }
 
         if (activeFilters.baths) {
-            results = results.filter(property => property.baths === parseInt(activeFilters.baths));
+            results = results.filter(property => property.bathrooms === parseInt(activeFilters.baths));
         }
 
         if (activeFilters.priceRange) {
@@ -145,7 +146,7 @@ const PropertySearch = ({ openAuthDialog }: PropertySearchProps) => {
                     </Button>
                   </SheetTrigger>
                   <SheetContent side="bottom" className="pt-6">
-                    <PropertyFilters onChange={handleFiltersChange} />
+                    <PropertyFilters onFilterChange={handleFiltersChange} />
                   </SheetContent>
                 </Sheet>
               )}
@@ -155,7 +156,7 @@ const PropertySearch = ({ openAuthDialog }: PropertySearchProps) => {
           {/* Filters (Desktop) */}
           {!isMobile && (
             <div className="mb-6">
-              <PropertyFilters onChange={handleFiltersChange} />
+              <PropertyFilters onFilterChange={handleFiltersChange} />
             </div>
           )}
 

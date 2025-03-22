@@ -3,6 +3,7 @@ import React from 'react';
 import { Phone, MessageCircle, Heart, Share2 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import ShareButton from './ShareButton';
+import { toast } from "@/components/ui/use-toast";
 
 interface MobileContactBarProps {
   agent: {
@@ -20,6 +21,10 @@ const MobileContactBar = ({ agent, propertyId, propertyTitle, openAuthDialog }: 
   const handleContact = (action: 'call' | 'whatsapp') => {
     if (!user) {
       openAuthDialog();
+      toast({
+        title: "Login Required",
+        description: "Please login to contact the agent",
+      });
       return;
     }
     

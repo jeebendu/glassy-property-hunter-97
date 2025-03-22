@@ -24,11 +24,6 @@ const Index = ({ openAuthDialog }: IndexProps) => {
       {/* Featured Properties Section */}
       <section className="py-16">
         <div className="container-custom">
-          <div className="mb-10">
-            <h2 className="section-title">Discover Our Properties</h2>
-            <p className="section-subtitle">Find the perfect property that suits your needs</p>
-          </div>
-          
           <FeaturedProperties />
         </div>
       </section>
