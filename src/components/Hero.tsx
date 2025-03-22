@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Search, MapPin, ChevronDown } from 'lucide-react';
+import { Search, MapPin, ChevronDown, AppleIcon, PlayCircle } from 'lucide-react';
 import { useAnimationOnScroll } from '@/lib/animations';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -60,10 +60,10 @@ const Hero = () => {
 
       {/* Hero Content */}
       <div className="container-custom relative z-10 pt-20 md:pt-0">
-        <div className="max-w-4xl text-white">
+        <div className="max-w-4xl mx-auto text-white text-center md:text-left">
           <h4 
             ref={titleAnimation.ref}
-            className={`${titleAnimation.animationClass} text-lg md:text-xl font-medium mb-3 flex items-center`}
+            className={`${titleAnimation.animationClass} text-lg md:text-xl font-medium mb-3 flex items-center justify-center md:justify-start`}
           >
             <span className="inline-block h-1 w-6 bg-primary mr-3"></span>
             Find Your Dream Home
@@ -71,14 +71,14 @@ const Hero = () => {
           
           <h1 
             ref={subtitleAnimation.ref}
-            className={`${subtitleAnimation.animationClass} text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight`}
+            className={`${subtitleAnimation.animationClass} text-3xl md:text-4xl lg:text-5xl font-bold mb-6 leading-tight`}
           >
             Properties to {activeTab} in {selectedLocation}
           </h1>
           
           <p 
             ref={searchAnimation.ref}
-            className={`${searchAnimation.animationClass} text-lg md:text-xl text-white/80 mb-4 max-w-2xl`}
+            className={`${searchAnimation.animationClass} text-lg md:text-xl text-white/80 mb-4 mx-auto md:mx-0 max-w-2xl`}
           >
             10K+ listings added daily and 63K+ total verified
           </p>
@@ -96,10 +96,10 @@ const Hero = () => {
           {/* Search Form - Desktop */}
           <div
             ref={searchAnimation.ref}
-            className={`${searchAnimation.animationClass} bg-white rounded-2xl shadow-xl overflow-hidden max-w-5xl mt-10 hidden md:block`}
+            className={`${searchAnimation.animationClass} bg-white rounded-2xl shadow-xl overflow-hidden max-w-5xl mt-10 mx-auto md:mx-0 hidden md:block`}
           >
-            {/* Tabs */}
-            <div className="flex border-b">
+            {/* Tabs - Center on mobile and desktop */}
+            <div className="flex justify-center border-b">
               {['buy', 'rent', 'commercial', 'pg/co-living', 'plots'].map((tab) => (
                 <button
                   key={tab}
@@ -161,7 +161,7 @@ const Hero = () => {
           {/* Search Form - Mobile */}
           <div
             ref={searchAnimation.ref}
-            className={`${searchAnimation.animationClass} md:hidden mt-8`}
+            className={`${searchAnimation.animationClass} md:hidden mt-8 px-4`}
           >
             <form onSubmit={handleSearch} className="relative">
               <Input
@@ -181,7 +181,7 @@ const Hero = () => {
           </div>
 
           {/* Continue last search */}
-          <div className="mt-4 flex items-center space-x-4">
+          <div className="mt-4 flex items-center justify-center md:justify-start space-x-4">
             <button className="text-white hover:text-primary transition-colors">
               Continue last search
             </button>
@@ -190,6 +190,21 @@ const Hero = () => {
               <span className="md:inline hidden">Bengaluru, Karnataka,...</span>
               <span className="md:hidden">Bengaluru...</span>
               <ChevronDown size={18} className="ml-2" />
+            </div>
+          </div>
+
+          {/* App Download Section */}
+          <div className="mt-10 flex flex-col md:flex-row items-center justify-center md:justify-start gap-4">
+            <p className="text-white/90 font-medium">Download our app:</p>
+            <div className="flex space-x-4">
+              <a href="#" className="flex items-center bg-black/60 hover:bg-black/80 text-white px-4 py-2 rounded-lg transition-colors">
+                <AppleIcon className="mr-2" size={20} />
+                <span className="text-sm">App Store</span>
+              </a>
+              <a href="#" className="flex items-center bg-black/60 hover:bg-black/80 text-white px-4 py-2 rounded-lg transition-colors">
+                <PlayCircle className="mr-2" size={20} />
+                <span className="text-sm">Google Play</span>
+              </a>
             </div>
           </div>
 

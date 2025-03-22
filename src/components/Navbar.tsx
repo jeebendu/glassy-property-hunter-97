@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { Search, Menu, X, MapPin, ChevronDown } from 'lucide-react';
+import { Link, useLocation } from 'react-router-dom';
+import { Search, Menu, X, MapPin, ChevronDown, ArrowDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
@@ -12,6 +12,8 @@ const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [selectedLocation, setSelectedLocation] = useState('Bengaluru');
   const isMobile = useIsMobile();
+  const location = useLocation();
+  const isHomePage = location.pathname === '/';
 
   useEffect(() => {
     const handleScroll = () => {
@@ -35,13 +37,16 @@ const Navbar = () => {
     <header 
       className={cn(
         "fixed top-0 left-0 w-full z-50 transition-all duration-500 ease-in-out",
-        scrolled ? "glass py-3" : "bg-transparent py-5"
+        scrolled ? "glass py-3" : isHomePage ? "bg-transparent py-5" : "glass py-3"
       )}
     >
       <div className="container-custom flex justify-between items-center">
         <div className="flex items-center">
           <Link to="/" className="flex items-center">
-            <span className="text-2xl font-bold tracking-tight text-primary">Prime<span className="text-foreground">Estate</span></span>
+            <span className="text-2xl font-bold tracking-tight text-primary">Prime<span className={cn(
+              "transition-colors",
+              (!scrolled && isHomePage) ? "text-white" : "text-foreground"
+            )}>Estate</span></span>
           </Link>
 
           {/* Mobile Location Selector */}
@@ -66,15 +71,33 @@ const Navbar = () => {
 
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center space-x-8">
-          <Link to="/" className="nav-link">Home</Link>
-          <Link to="/search" className="nav-link">Properties</Link>
-          <Link to="/blog" className="nav-link">Blog</Link>
-          <Link to="/about" className="nav-link">About</Link>
-          <Link to="/contact" className="nav-link">Contact</Link>
+          <Link to="/" className={cn(
+            "nav-link", 
+            (!scrolled && isHomePage) ? "text-white hover:text-white/80" : ""
+          )}>Home</Link>
+          <Link to="/search" className={cn(
+            "nav-link", 
+            (!scrolled && isHomePage) ? "text-white hover:text-white/80" : ""
+          )}>Properties</Link>
+          <Link to="/blog" className={cn(
+            "nav-link", 
+            (!scrolled && isHomePage) ? "text-white hover:text-white/80" : ""
+          )}>Blog</Link>
+          <Link to="/about" className={cn(
+            "nav-link", 
+            (!scrolled && isHomePage) ? "text-white hover:text-white/80" : ""
+          )}>About</Link>
+          <Link to="/contact" className={cn(
+            "nav-link", 
+            (!scrolled && isHomePage) ? "text-white hover:text-white/80" : ""
+          )}>Contact</Link>
         </nav>
 
         <div className="hidden md:flex items-center space-x-4">
-          <Link to="/search" className="btn-ghost flex items-center space-x-2">
+          <Link to="/search" className={cn(
+            "btn-ghost flex items-center space-x-2",
+            (!scrolled && isHomePage) ? "text-white hover:bg-white/10" : ""
+          )}>
             <Search size={18} />
             <span>Search</span>
           </Link>
@@ -86,7 +109,7 @@ const Navbar = () => {
           className="md:hidden p-2 z-50 relative"
           onClick={() => setIsMenuOpen(!isMenuOpen)}
         >
-          {isMenuOpen ? <X size={24} className="text-white" /> : <Menu size={24} />}
+          {isMenuOpen ? <X size={24} className="text-white" /> : <Menu size={24} className={(!scrolled && isHomePage) ? "text-white" : ""} />}
         </button>
 
         {/* Mobile Navigation Menu */}
