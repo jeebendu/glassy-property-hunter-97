@@ -1,4 +1,3 @@
-
 import React from 'react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
@@ -17,7 +16,11 @@ import {
   Calendar
 } from 'lucide-react';
 
-const UserProfile = () => {
+interface UserProfileProps {
+  openAuthDialog?: () => void;
+}
+
+const UserProfile = ({ openAuthDialog }: UserProfileProps) => {
   // Mock user data (in a real app, this would come from your auth system)
   const user = {
     name: 'John Doe',
@@ -29,7 +32,7 @@ const UserProfile = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navbar />
+      <Navbar openAuthDialog={openAuthDialog} />
       
       <div className="pt-24 pb-16">
         <div className="container-custom">

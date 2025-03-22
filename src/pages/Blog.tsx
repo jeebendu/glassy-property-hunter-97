@@ -1,9 +1,12 @@
-
 import React from 'react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
+
+interface BlogProps {
+  openAuthDialog?: () => void;
+}
 
 const featuredPost = {
   id: 1,
@@ -77,13 +80,12 @@ const categories = [
   "All", "Buying", "Selling", "Investing", "Finance", "Technology", "Lifestyle", "Trends"
 ];
 
-const Blog = () => {
+const Blog = ({ openAuthDialog }: BlogProps) => {
   return (
     <div className="min-h-screen bg-background">
-      <Navbar />
+      <Navbar openAuthDialog={openAuthDialog} />
 
       <div className="pt-24 pb-16">
-        {/* Hero Header */}
         <div className="bg-primary/5 py-16">
           <div className="container-custom text-center">
             <h1 className="text-4xl md:text-5xl font-bold mb-6">Our Blog</h1>
@@ -93,7 +95,6 @@ const Blog = () => {
           </div>
         </div>
 
-        {/* Featured Post */}
         <div className="container-custom py-16">
           <h2 className="text-2xl font-bold mb-8">Featured Article</h2>
           <div className="relative rounded-2xl overflow-hidden bg-white shadow-lg">
@@ -124,7 +125,6 @@ const Blog = () => {
           </div>
         </div>
 
-        {/* Category Filter */}
         <div className="container-custom mb-12">
           <div className="flex overflow-x-auto scrollbar-hide pb-4 gap-2">
             {categories.map((category) => (
@@ -142,7 +142,6 @@ const Blog = () => {
           </div>
         </div>
 
-        {/* All Blog Posts */}
         <div className="container-custom">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {blogPosts.map((post) => (
@@ -177,7 +176,6 @@ const Blog = () => {
             ))}
           </div>
 
-          {/* Pagination */}
           <div className="mt-16 flex justify-center">
             <div className="flex space-x-2">
               <button className="w-10 h-10 rounded-full border flex items-center justify-center text-muted-foreground hover:border-primary hover:text-primary transition-colors">
