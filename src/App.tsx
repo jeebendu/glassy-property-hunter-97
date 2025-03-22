@@ -10,6 +10,7 @@ import NotFound from "./pages/NotFound";
 import PropertySearch from "./pages/PropertySearch";
 import Blog from "./pages/Blog";
 import PostProperty from "./pages/PostProperty";
+import UserProfile from "./pages/UserProfile";
 
 const queryClient = new QueryClient();
 
@@ -25,6 +26,7 @@ const App = () => (
           <Route path="/search" element={<PropertySearch />} />
           <Route path="/blog" element={<Blog />} />
           <Route path="/post-property" element={<PostProperty />} />
+          <Route path="/profile" element={<UserProfile />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

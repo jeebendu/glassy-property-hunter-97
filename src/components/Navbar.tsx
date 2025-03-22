@@ -1,19 +1,27 @@
 
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Search, Menu, X, MapPin, ChevronDown, ArrowDown } from 'lucide-react';
+import { Search, MapPin, ChevronDown, User } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { 
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger
+} from "@/components/ui/dropdown-menu";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import LocationSelector from './LocationSelector';
 
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [selectedLocation, setSelectedLocation] = useState('Bengaluru');
   const isMobile = useIsMobile();
   const location = useLocation();
   const isHomePage = location.pathname === '/';
+  const [isLoggedIn, setIsLoggedIn] = useState(false); // Simulate authentication state
 
   useEffect(() => {
     const handleScroll = () => {
@@ -101,34 +109,59 @@ const Navbar = () => {
             <Search size={18} />
             <span>Search</span>
           </Link>
-          <Link to="/post-property" className="btn-primary">List Property</Link>
-        </div>
-
-        {/* Mobile Navigation Toggle */}
-        <button 
-          className="md:hidden p-2 z-50 relative"
-          onClick={() => setIsMenuOpen(!isMenuOpen)}
-        >
-          {isMenuOpen ? <X size={24} className="text-white" /> : <Menu size={24} className={(!scrolled && isHomePage) ? "text-white" : ""} />}
-        </button>
-
-        {/* Mobile Navigation Menu */}
-        <div 
-          className={cn(
-            "fixed inset-0 glass-dark md:hidden flex flex-col justify-center items-center transition-all duration-500 ease-in-out",
-            isMenuOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+          <Link to="/post-property" className="btn-primary">Post Property</Link>
+          
+          {/* User Profile Dropdown */}
+          {isLoggedIn ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button className="flex items-center space-x-2">
+                  <Avatar className="h-8 w-8">
+                    <AvatarImage src="/avatar.png" />
+                    <AvatarFallback>JD</AvatarFallback>
+                  </Avatar>
+                  <span className={cn(
+                    "hidden md:inline-block text-sm font-medium",
+                    (!scrolled && isHomePage) ? "text-white" : ""
+                  )}>John Doe</span>
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-56">
+                <DropdownMenuItem asChild>
+                  <Link to="/profile" className="cursor-pointer">My Profile</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/my-properties" className="cursor-pointer">My Properties</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/saved-properties" className="cursor-pointer">Saved Properties</Link>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={() => setIsLoggedIn(false)} className="cursor-pointer">
+                  Log Out
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button className={cn(
+                  "flex items-center space-x-2 p-2 rounded-full",
+                  (!scrolled && isHomePage) ? "text-white hover:bg-white/10" : "hover:bg-gray-100"
+                )}>
+                  <User size={20} />
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem onClick={() => setIsLoggedIn(true)} className="cursor-pointer">
+                  Login
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/register" className="cursor-pointer">Register</Link>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           )}
-        >
-          <nav className="flex flex-col items-center space-y-8 text-white">
-            <Link to="/" className="text-2xl font-medium" onClick={() => setIsMenuOpen(false)}>Home</Link>
-            <Link to="/search" className="text-2xl font-medium" onClick={() => setIsMenuOpen(false)}>Properties</Link>
-            <Link to="/blog" className="text-2xl font-medium" onClick={() => setIsMenuOpen(false)}>Blog</Link>
-            <Link to="/about" className="text-2xl font-medium" onClick={() => setIsMenuOpen(false)}>About</Link>
-            <Link to="/contact" className="text-2xl font-medium" onClick={() => setIsMenuOpen(false)}>Contact</Link>
-            <Link to="/post-property" className="btn-primary mt-4 w-40" onClick={() => setIsMenuOpen(false)}>
-              List Property
-            </Link>
-          </nav>
         </div>
       </div>
     </header>
