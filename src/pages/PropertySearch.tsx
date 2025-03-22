@@ -5,7 +5,7 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import PropertyFilters from '@/components/PropertyFilters';
 import PropertyCard from '@/components/PropertyCard';
-import { Search, MapPin, ChevronDown, X } from 'lucide-react';
+import { Search, MapPin, ChevronDown, X, Filter } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { 
@@ -35,8 +35,15 @@ const PropertySearch = () => {
     price: "all",
     bedrooms: "all",
     bathrooms: "all",
-    status: "all"
+    status: "all",
+    balcony: "all",
+    readyToMove: "all",
+    furnishing: "all",
+    carpetArea: [0, 10000],
+    priceRange: [0, 10000000]
   });
+  
+  const [selectedFilters, setSelectedFilters] = useState<{[key: string]: string | number[]}>({});
 
   // Load search params from navigation state if available
   useEffect(() => {
@@ -50,6 +57,23 @@ const PropertySearch = () => {
   useEffect(() => {
     filterProperties();
   }, [activeFilters, searchTerm, activeTab, selectedLocation]);
+  
+  useEffect(() => {
+    // Convert activeFilters to selectedFilters for display
+    const newSelectedFilters: {[key: string]: string | number[]} = {};
+    
+    Object.entries(activeFilters).forEach(([key, value]) => {
+      if (value !== "all" && key !== "priceRange" && key !== "carpetArea") {
+        newSelectedFilters[key] = value;
+      } else if ((key === "priceRange" || key === "carpetArea") && 
+                (Array.isArray(value) && 
+                (value[0] > 0 || value[1] < (key === "priceRange" ? 10000000 : 10000)))) {
+        newSelectedFilters[key] = value;
+      }
+    });
+    
+    setSelectedFilters(newSelectedFilters);
+  }, [activeFilters]);
 
   const filterProperties = () => {
     let filtered = [...properties];
@@ -75,6 +99,21 @@ const PropertySearch = () => {
       );
     }
     
+    // Filter by slider price range
+    if (activeFilters.priceRange[0] > 0 || activeFilters.priceRange[1] < 10000000) {
+      filtered = filtered.filter(property => 
+        property.price >= activeFilters.priceRange[0] && property.price <= activeFilters.priceRange[1]
+      );
+    }
+    
+    // Filter by carpet area
+    if (activeFilters.carpetArea[0] > 0 || activeFilters.carpetArea[1] < 10000) {
+      filtered = filtered.filter(property => {
+        const area = property.squareFeet || (property.builtUpArea ? parseInt(property.builtUpArea) : 0);
+        return area >= activeFilters.carpetArea[0] && area <= activeFilters.carpetArea[1];
+      });
+    }
+    
     // Filter by bedrooms
     if (activeFilters.bedrooms !== "all") {
       if (activeFilters.bedrooms === "4+") {
@@ -91,6 +130,35 @@ const PropertySearch = () => {
       } else {
         filtered = filtered.filter(property => property.bathrooms === Number(activeFilters.bathrooms));
       }
+    }
+    
+    // Filter by balcony
+    if (activeFilters.balcony !== "all") {
+      if (activeFilters.balcony === "3+") {
+        filtered = filtered.filter(property => 
+          property.balcony && parseInt(property.balcony.toString()) >= 3
+        );
+      } else {
+        filtered = filtered.filter(property => 
+          property.balcony && property.balcony.toString() === activeFilters.balcony
+        );
+      }
+    }
+    
+    // Filter by ready to move
+    if (activeFilters.readyToMove !== "all") {
+      filtered = filtered.filter(property => 
+        activeFilters.readyToMove === "ready" 
+          ? property.availableFrom === "Immediate" 
+          : property.availableFrom !== "Immediate"
+      );
+    }
+    
+    // Filter by furnishing
+    if (activeFilters.furnishing !== "all") {
+      filtered = filtered.filter(property => 
+        property.furnishType && property.furnishType.toLowerCase() === activeFilters.furnishing
+      );
     }
     
     // Filter by status
@@ -118,25 +186,46 @@ const PropertySearch = () => {
   const handleFilterChange = (filters: any) => {
     setActiveFilters(filters);
   };
+  
+  const removeFilter = (key: string) => {
+    const newFilters = { ...activeFilters };
+    if (key === "carpetArea") {
+      newFilters.carpetArea = [0, 10000];
+    } else if (key === "priceRange") {
+      newFilters.priceRange = [0, 10000000];
+    } else {
+      newFilters[key as keyof typeof newFilters] = "all";
+    }
+    
+    setActiveFilters(newFilters);
+  };
+  
+  const formatPrice = (value: number) => {
+    if (value >= 10000000) return "₹1Cr+";
+    if (value >= 100000) return `₹${(value/100000).toFixed(1)}L`;
+    return `₹${value}`;
+  };
+  
+  const formatArea = (value: number) => {
+    return `${value} sq.ft`;
+  };
 
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
 
-      <div className="pt-24">
-        {/* Search Header */}
-        <div className="bg-primary/5 py-8">
+      <div className="pt-20">
+        {/* Search Header - Reduced space */}
+        <div className="bg-primary/5 py-4">
           <div className="container-custom">
-            <h1 className="text-3xl font-bold mb-6">Property Search</h1>
-            
             {/* Search Form */}
             <div className="bg-white rounded-xl shadow-md overflow-hidden">
               {/* Tabs */}
               <div className="flex border-b overflow-x-auto scrollbar-hide">
-                {['buy', 'rent', 'commercial', 'pg/co-living', 'plots'].map((tab) => (
+                {['buy', 'rent', 'pg', 'commercial', 'plots'].map((tab) => (
                   <button
                     key={tab}
-                    className={`px-4 py-3 font-medium whitespace-nowrap transition-colors ${
+                    className={`px-4 py-3 font-medium whitespace-nowrap transition-colors min-w-16 ${
                       activeTab === tab 
                         ? 'text-primary border-b-2 border-primary' 
                         : 'text-gray-500 hover:text-gray-800'
@@ -190,20 +279,69 @@ const PropertySearch = () => {
                 </div>
               </form>
             </div>
+            
+            {/* Selected filters display */}
+            {Object.keys(selectedFilters).length > 0 && (
+              <div className="flex flex-wrap gap-2 mt-4">
+                {Object.entries(selectedFilters).map(([key, value]) => (
+                  <div 
+                    key={key} 
+                    className="bg-white text-primary text-xs rounded-full px-3 py-1.5 flex items-center shadow-sm"
+                  >
+                    <span className="capitalize mr-1">
+                      {key === "priceRange" 
+                        ? `Price: ${formatPrice((value as number[])[0])} - ${formatPrice((value as number[])[1])}` 
+                        : key === "carpetArea"
+                          ? `Area: ${formatArea((value as number[])[0])} - ${formatArea((value as number[])[1])}`
+                          : `${key.replace(/([A-Z])/g, ' $1').trim()}: ${value}`}
+                    </span>
+                    <button 
+                      onClick={() => removeFilter(key)}
+                      className="ml-1 rounded-full hover:bg-primary/20 p-0.5"
+                    >
+                      <X size={12} />
+                    </button>
+                  </div>
+                ))}
+                
+                {Object.keys(selectedFilters).length > 1 && (
+                  <button 
+                    onClick={() => setActiveFilters({
+                      type: "all",
+                      price: "all",
+                      bedrooms: "all",
+                      bathrooms: "all",
+                      status: "all",
+                      balcony: "all",
+                      readyToMove: "all",
+                      furnishing: "all",
+                      carpetArea: [0, 10000],
+                      priceRange: [0, 10000000]
+                    })}
+                    className="bg-white text-primary text-xs rounded-full px-3 py-1.5 flex items-center shadow-sm"
+                  >
+                    Clear All
+                  </button>
+                )}
+              </div>
+            )}
           </div>
         </div>
 
         {/* Search Results */}
-        <div className="container-custom py-8">
+        <div className="container-custom py-6">
           <div className="flex flex-col lg:flex-row gap-8">
             {/* Filters */}
             {isMobile ? (
               <Sheet>
                 <SheetTrigger asChild>
                   <Button variant="outline" className="mb-4 w-full flex justify-between">
-                    <span>Filters</span>
+                    <div className="flex items-center">
+                      <Filter size={16} className="mr-2" />
+                      <span>Filters</span>
+                    </div>
                     <span className="bg-primary/10 text-primary rounded-full px-2 py-0.5 text-xs font-medium">
-                      {Object.values(activeFilters).filter(v => v !== "all").length} applied
+                      {Object.keys(selectedFilters).length} applied
                     </span>
                   </Button>
                 </SheetTrigger>
@@ -242,7 +380,18 @@ const PropertySearch = () => {
                   <div className="col-span-full py-12 text-center">
                     <p className="text-muted-foreground text-lg">No properties found matching your criteria</p>
                     <button 
-                      onClick={filterProperties} 
+                      onClick={() => setActiveFilters({
+                        type: "all",
+                        price: "all",
+                        bedrooms: "all",
+                        bathrooms: "all",
+                        status: "all",
+                        balcony: "all",
+                        readyToMove: "all",
+                        furnishing: "all",
+                        carpetArea: [0, 10000],
+                        priceRange: [0, 10000000]
+                      })} 
                       className="mt-4 px-4 py-2 text-primary border border-primary rounded-md hover:bg-primary/5"
                     >
                       Reset Filters

@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Search, MapPin, ChevronDown, AppleIcon, PlayCircle } from 'lucide-react';
+import { Search, MapPin, ChevronDown, AppleIcon, PlayCircle, Plus } from 'lucide-react';
 import { useAnimationOnScroll } from '@/lib/animations';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -59,11 +59,11 @@ const Hero = () => {
       </div>
 
       {/* Hero Content */}
-      <div className="container-custom relative z-10 pt-20 md:pt-0">
+      <div className="container-custom relative z-10 pt-24 md:pt-0">
         <div className="max-w-4xl mx-auto text-white text-center md:text-left">
           <h4 
             ref={titleAnimation.ref}
-            className={`${titleAnimation.animationClass} text-lg md:text-xl font-medium mb-3 flex items-center justify-center md:justify-start`}
+            className={`${titleAnimation.animationClass} text-lg md:text-xl font-medium mb-2 flex items-center justify-center md:justify-start`}
           >
             <span className="inline-block h-1 w-6 bg-primary mr-3"></span>
             Find Your Dream Home
@@ -71,14 +71,14 @@ const Hero = () => {
           
           <h1 
             ref={subtitleAnimation.ref}
-            className={`${subtitleAnimation.animationClass} text-3xl md:text-4xl lg:text-5xl font-bold mb-6 leading-tight`}
+            className={`${subtitleAnimation.animationClass} text-2xl md:text-4xl lg:text-5xl font-bold mb-4 leading-tight`}
           >
             Properties to {activeTab} in {selectedLocation}
           </h1>
           
           <p 
             ref={searchAnimation.ref}
-            className={`${searchAnimation.animationClass} text-lg md:text-xl text-white/80 mb-4 mx-auto md:mx-0 max-w-2xl`}
+            className={`${searchAnimation.animationClass} text-base md:text-xl text-white/80 mb-4 mx-auto md:mx-0 max-w-2xl`}
           >
             10K+ listings added daily and 63K+ total verified
           </p>
@@ -103,7 +103,7 @@ const Hero = () => {
               {['buy', 'rent', 'commercial', 'pg/co-living', 'plots'].map((tab) => (
                 <button
                   key={tab}
-                  className={`px-6 py-4 font-medium transition-colors ${
+                  className={`px-6 py-4 font-medium transition-colors min-w-24 ${
                     activeTab === tab 
                       ? 'text-primary border-b-2 border-primary' 
                       : 'text-gray-500 hover:text-gray-800'
@@ -158,10 +158,29 @@ const Hero = () => {
             </form>
           </div>
 
+          {/* Mobile Tabs - Vertical Display */}
+          <div className="md:hidden flex justify-center overflow-x-auto mt-4 mb-4">
+            <div className="flex space-x-2">
+              {['buy', 'rent', 'pg', 'commercial', 'plots'].map((tab) => (
+                <button
+                  key={tab}
+                  className={`px-3 py-2 font-medium rounded-full transition-colors whitespace-nowrap min-w-14 ${
+                    activeTab === tab 
+                      ? 'bg-primary text-white' 
+                      : 'bg-white/20 text-white hover:bg-white/30'
+                  }`}
+                  onClick={() => setActiveTab(tab)}
+                >
+                  {tab.toUpperCase()}
+                </button>
+              ))}
+            </div>
+          </div>
+
           {/* Search Form - Mobile */}
           <div
             ref={searchAnimation.ref}
-            className={`${searchAnimation.animationClass} md:hidden mt-8 px-4`}
+            className={`${searchAnimation.animationClass} md:hidden px-4`}
           >
             <form onSubmit={handleSearch} className="relative">
               <Input
@@ -193,7 +212,7 @@ const Hero = () => {
             </div>
           </div>
 
-          {/* App Download Section */}
+          {/* App Download Section - Moved up before the app download section */}
           <div className="mt-10 flex flex-col md:flex-row items-center justify-center md:justify-start gap-4">
             <p className="text-white/90 font-medium">Download our app:</p>
             <div className="flex space-x-4">

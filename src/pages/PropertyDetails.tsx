@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
@@ -12,8 +12,23 @@ const PropertyDetails = () => {
   const { id } = useParams<{ id: string }>();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isFavorite, setIsFavorite] = useState(false);
+  const [isTabsSticky, setIsTabsSticky] = useState(false);
+  const tabsRef = useRef<HTMLDivElement>(null);
   
   const property = properties.find(p => p.id === id);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (tabsRef.current) {
+        const headerHeight = 80; // Approximate height of the header
+        const tabsPosition = tabsRef.current.getBoundingClientRect().top;
+        setIsTabsSticky(tabsPosition <= headerHeight);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
   
   if (!property) {
     return (
@@ -162,8 +177,17 @@ const PropertyDetails = () => {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Main Content */}
             <div className="lg:col-span-2">
-              {/* Detailed Property Info */}
-              <PropertyInfo property={property} />
+              {/* Sticky Tabs Container */}
+              <div 
+                ref={tabsRef}
+                className={cn(
+                  "transition-all duration-300",
+                  isTabsSticky && "sticky top-[76px] z-30 bg-white/95 backdrop-blur-sm shadow-sm -mx-4 px-4 py-2"
+                )}
+              >
+                {/* Detailed Property Info */}
+                <PropertyInfo property={property} />
+              </div>
             </div>
             
             {/* Sidebar */}
