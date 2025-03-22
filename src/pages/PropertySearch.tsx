@@ -51,7 +51,7 @@ const PropertySearch = ({ openAuthDialog }: PropertySearchProps) => {
             results = results.filter(property =>
                 property.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
                 property.address.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                property.location?.toLowerCase().includes(searchQuery.toLowerCase())
+                property.city?.toLowerCase().includes(searchQuery.toLowerCase())
             );
         }
 
