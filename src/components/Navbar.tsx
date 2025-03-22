@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Search, MapPin, ChevronDown, User } from 'lucide-react';
+import { Search, MapPin, ChevronDown, User, Menu } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import LocationSelector from './LocationSelector';
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
@@ -77,38 +78,7 @@ const Navbar = () => {
           )}
         </div>
 
-        {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center space-x-8">
-          <Link to="/" className={cn(
-            "nav-link", 
-            (!scrolled && isHomePage) ? "text-white hover:text-white/80" : ""
-          )}>Home</Link>
-          <Link to="/search" className={cn(
-            "nav-link", 
-            (!scrolled && isHomePage) ? "text-white hover:text-white/80" : ""
-          )}>Properties</Link>
-          <Link to="/blog" className={cn(
-            "nav-link", 
-            (!scrolled && isHomePage) ? "text-white hover:text-white/80" : ""
-          )}>Blog</Link>
-          <Link to="/about" className={cn(
-            "nav-link", 
-            (!scrolled && isHomePage) ? "text-white hover:text-white/80" : ""
-          )}>About</Link>
-          <Link to="/contact" className={cn(
-            "nav-link", 
-            (!scrolled && isHomePage) ? "text-white hover:text-white/80" : ""
-          )}>Contact</Link>
-        </nav>
-
-        <div className="hidden md:flex items-center space-x-4">
-          <Link to="/search" className={cn(
-            "btn-ghost flex items-center space-x-2",
-            (!scrolled && isHomePage) ? "text-white hover:bg-white/10" : ""
-          )}>
-            <Search size={18} />
-            <span>Search</span>
-          </Link>
+        <div className="flex items-center space-x-4">
           <Link to="/post-property" className="btn-primary">Post Property</Link>
           
           {/* User Profile Dropdown */}
@@ -161,6 +131,56 @@ const Navbar = () => {
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
+          )}
+
+          {/* Mobile Menu */}
+          {isMobile && (
+            <Sheet>
+              <SheetTrigger asChild>
+                <button className={cn(
+                  "p-2 rounded-full",
+                  (!scrolled && isHomePage) ? "text-white hover:bg-white/10" : "hover:bg-gray-100"
+                )}>
+                  <Menu size={24} />
+                </button>
+              </SheetTrigger>
+              <SheetContent>
+                <div className="py-4">
+                  <div className="mb-8">
+                    <h2 className="text-xl font-bold mb-4">Menu</h2>
+                    <nav className="space-y-4">
+                      <Link to="/" className="block py-2 hover:text-primary transition-colors">Home</Link>
+                      <Link to="/search" className="block py-2 hover:text-primary transition-colors">Properties</Link>
+                      <Link to="/post-property" className="block py-2 hover:text-primary transition-colors">Post Property</Link>
+                      <Link to="/profile" className="block py-2 hover:text-primary transition-colors">My Profile</Link>
+                      <Link to="/blog" className="block py-2 hover:text-primary transition-colors">Blog</Link>
+                      <Link to="/about" className="block py-2 hover:text-primary transition-colors">About</Link>
+                      <Link to="/contact" className="block py-2 hover:text-primary transition-colors">Contact</Link>
+                    </nav>
+                  </div>
+                  {!isLoggedIn ? (
+                    <div className="space-y-2">
+                      <button 
+                        onClick={() => setIsLoggedIn(true)} 
+                        className="w-full btn-primary"
+                      >
+                        Login
+                      </button>
+                      <Link to="/register" className="block w-full btn-outline text-center">
+                        Register
+                      </Link>
+                    </div>
+                  ) : (
+                    <button 
+                      onClick={() => setIsLoggedIn(false)} 
+                      className="w-full btn-outline"
+                    >
+                      Logout
+                    </button>
+                  )}
+                </div>
+              </SheetContent>
+            </Sheet>
           )}
         </div>
       </div>

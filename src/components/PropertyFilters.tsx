@@ -9,7 +9,11 @@ interface FilterOption {
   label: string;
 }
 
-const PropertyFilters = () => {
+interface PropertyFiltersProps {
+  onFilterChange: (filters: any) => void;
+}
+
+const PropertyFilters = ({ onFilterChange }: PropertyFiltersProps) => {
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [activeFilters, setActiveFilters] = useState({
     type: "all",
@@ -20,20 +24,26 @@ const PropertyFilters = () => {
   });
 
   const handleFilterChange = (filterType: string, value: string) => {
-    setActiveFilters(prev => ({
-      ...prev,
+    const newFilters = {
+      ...activeFilters,
       [filterType]: value
-    }));
+    };
+    
+    setActiveFilters(newFilters);
+    onFilterChange(newFilters);
   };
 
   const clearFilters = () => {
-    setActiveFilters({
+    const resetFilters = {
       type: "all",
       price: "all",
       bedrooms: "all",
       bathrooms: "all",
       status: "all"
-    });
+    };
+    
+    setActiveFilters(resetFilters);
+    onFilterChange(resetFilters);
   };
 
   const renderFilterOptions = (options: FilterOption[], filterType: string) => {

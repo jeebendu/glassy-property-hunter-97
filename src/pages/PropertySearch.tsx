@@ -1,9 +1,10 @@
 
 import React, { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, Link } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import PropertyFilters from '@/components/PropertyFilters';
+import PropertyCard from '@/components/PropertyCard';
 import { Search, MapPin, ChevronDown, X } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -17,6 +18,8 @@ import {
 import LocationSelector from '@/components/LocationSelector';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { properties } from '@/lib/data';
+import DownloadApp from '@/components/DownloadApp';
 
 const PropertySearch = () => {
   const location = useLocation();
@@ -26,6 +29,14 @@ const PropertySearch = () => {
   const [activeTab, setActiveTab] = useState('buy');
   const [showLocationDialog, setShowLocationDialog] = useState(false);
   const [filtersOpen, setFiltersOpen] = useState(false);
+  const [filteredProperties, setFilteredProperties] = useState(properties);
+  const [activeFilters, setActiveFilters] = useState({
+    type: "all",
+    price: "all",
+    bedrooms: "all",
+    bathrooms: "all",
+    status: "all"
+  });
 
   // Load search params from navigation state if available
   useEffect(() => {
@@ -35,6 +46,60 @@ const PropertySearch = () => {
       if (location.state.type) setActiveTab(location.state.type);
     }
   }, [location.state]);
+  
+  useEffect(() => {
+    filterProperties();
+  }, [activeFilters, searchTerm, activeTab, selectedLocation]);
+
+  const filterProperties = () => {
+    let filtered = [...properties];
+    
+    // Filter by search term
+    if (searchTerm) {
+      filtered = filtered.filter(property => 
+        property.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        property.address.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+    
+    // Filter by property type
+    if (activeFilters.type !== "all") {
+      filtered = filtered.filter(property => property.type === activeFilters.type);
+    }
+    
+    // Filter by price range
+    if (activeFilters.price !== "all") {
+      const [min, max] = activeFilters.price.split('-').map(Number);
+      filtered = filtered.filter(property => 
+        property.price >= min && (max ? property.price <= max : true)
+      );
+    }
+    
+    // Filter by bedrooms
+    if (activeFilters.bedrooms !== "all") {
+      if (activeFilters.bedrooms === "4+") {
+        filtered = filtered.filter(property => property.bedrooms >= 4);
+      } else {
+        filtered = filtered.filter(property => property.bedrooms === Number(activeFilters.bedrooms));
+      }
+    }
+    
+    // Filter by bathrooms
+    if (activeFilters.bathrooms !== "all") {
+      if (activeFilters.bathrooms === "3+") {
+        filtered = filtered.filter(property => property.bathrooms >= 3);
+      } else {
+        filtered = filtered.filter(property => property.bathrooms === Number(activeFilters.bathrooms));
+      }
+    }
+    
+    // Filter by status
+    if (activeFilters.status !== "all") {
+      filtered = filtered.filter(property => property.status === activeFilters.status);
+    }
+    
+    setFilteredProperties(filtered);
+  };
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -42,13 +107,16 @@ const PropertySearch = () => {
       setShowLocationDialog(true);
       return;
     }
-    console.log({ searchTerm, location: selectedLocation, type: activeTab });
-    // Implement search functionality
+    filterProperties();
   };
 
   const handleLocationSelect = (location: string) => {
     setSelectedLocation(location);
     setShowLocationDialog(false);
+  };
+  
+  const handleFilterChange = (filters: any) => {
+    setActiveFilters(filters);
   };
 
   return (
@@ -135,25 +203,25 @@ const PropertySearch = () => {
                   <Button variant="outline" className="mb-4 w-full flex justify-between">
                     <span>Filters</span>
                     <span className="bg-primary/10 text-primary rounded-full px-2 py-0.5 text-xs font-medium">
-                      4 applied
+                      {Object.values(activeFilters).filter(v => v !== "all").length} applied
                     </span>
                   </Button>
                 </SheetTrigger>
                 <SheetContent className="overflow-y-auto">
                   <h2 className="text-xl font-bold mb-6">Filters</h2>
-                  <PropertyFilters />
+                  <PropertyFilters onFilterChange={handleFilterChange} />
                 </SheetContent>
               </Sheet>
             ) : (
               <div className="w-full lg:w-1/4 lg:sticky lg:top-24 lg:h-[calc(100vh-6rem)] lg:overflow-y-auto">
-                <PropertyFilters />
+                <PropertyFilters onFilterChange={handleFilterChange} />
               </div>
             )}
             
             {/* Results */}
             <div className="w-full lg:w-3/4">
               <div className="flex justify-between items-center mb-6">
-                <h2 className="text-xl font-semibold">245 Properties Found</h2>
+                <h2 className="text-xl font-semibold">{filteredProperties.length} Properties Found</h2>
                 <div className="flex items-center">
                   <span className="text-sm text-muted-foreground mr-2">Sort by:</span>
                   <select className="text-sm border-none bg-transparent focus:ring-0">
@@ -166,44 +234,51 @@ const PropertySearch = () => {
               </div>
               
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
-                {/* Property cards would be rendered here */}
-                <div className="h-64 rounded-xl bg-gray-100 flex items-center justify-center">
-                  <p className="text-muted-foreground">Property listing</p>
-                </div>
-                <div className="h-64 rounded-xl bg-gray-100 flex items-center justify-center">
-                  <p className="text-muted-foreground">Property listing</p>
-                </div>
-                <div className="h-64 rounded-xl bg-gray-100 flex items-center justify-center">
-                  <p className="text-muted-foreground">Property listing</p>
-                </div>
-                <div className="h-64 rounded-xl bg-gray-100 flex items-center justify-center">
-                  <p className="text-muted-foreground">Property listing</p>
-                </div>
+                {filteredProperties.length > 0 ? (
+                  filteredProperties.map(property => (
+                    <PropertyCard key={property.id} property={property} />
+                  ))
+                ) : (
+                  <div className="col-span-full py-12 text-center">
+                    <p className="text-muted-foreground text-lg">No properties found matching your criteria</p>
+                    <button 
+                      onClick={filterProperties} 
+                      className="mt-4 px-4 py-2 text-primary border border-primary rounded-md hover:bg-primary/5"
+                    >
+                      Reset Filters
+                    </button>
+                  </div>
+                )}
               </div>
               
               {/* Pagination */}
-              <div className="mt-10 flex justify-center">
-                <div className="flex space-x-2">
-                  <button className="w-10 h-10 rounded-full border flex items-center justify-center text-muted-foreground hover:border-primary hover:text-primary transition-colors">
-                    &laquo;
-                  </button>
-                  <button className="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center">
-                    1
-                  </button>
-                  <button className="w-10 h-10 rounded-full border flex items-center justify-center text-muted-foreground hover:border-primary hover:text-primary transition-colors">
-                    2
-                  </button>
-                  <button className="w-10 h-10 rounded-full border flex items-center justify-center text-muted-foreground hover:border-primary hover:text-primary transition-colors">
-                    3
-                  </button>
-                  <button className="w-10 h-10 rounded-full border flex items-center justify-center text-muted-foreground hover:border-primary hover:text-primary transition-colors">
-                    &raquo;
-                  </button>
+              {filteredProperties.length > 0 && (
+                <div className="mt-10 flex justify-center">
+                  <div className="flex space-x-2">
+                    <button className="w-10 h-10 rounded-full border flex items-center justify-center text-muted-foreground hover:border-primary hover:text-primary transition-colors">
+                      &laquo;
+                    </button>
+                    <button className="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center">
+                      1
+                    </button>
+                    <button className="w-10 h-10 rounded-full border flex items-center justify-center text-muted-foreground hover:border-primary hover:text-primary transition-colors">
+                      2
+                    </button>
+                    <button className="w-10 h-10 rounded-full border flex items-center justify-center text-muted-foreground hover:border-primary hover:text-primary transition-colors">
+                      3
+                    </button>
+                    <button className="w-10 h-10 rounded-full border flex items-center justify-center text-muted-foreground hover:border-primary hover:text-primary transition-colors">
+                      &raquo;
+                    </button>
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
           </div>
         </div>
+        
+        {/* Download App Section */}
+        <DownloadApp />
       </div>
 
       <Footer />

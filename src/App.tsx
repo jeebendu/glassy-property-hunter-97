@@ -27,6 +27,8 @@ const App = () => (
           <Route path="/blog" element={<Blog />} />
           <Route path="/post-property" element={<PostProperty />} />
           <Route path="/profile" element={<UserProfile />} />
+          <Route path="/my-properties" element={<UserProfile />} />
+          <Route path="/saved-properties" element={<UserProfile />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
