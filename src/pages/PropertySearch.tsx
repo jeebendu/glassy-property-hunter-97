@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useLocation, Link } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
@@ -50,8 +49,7 @@ const PropertySearch = ({ openAuthDialog }: PropertySearchProps) => {
         if (searchQuery) {
             results = results.filter(property =>
                 property.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                property.address.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                property.city?.toLowerCase().includes(searchQuery.toLowerCase())
+                property.address.toLowerCase().includes(searchQuery.toLowerCase())
             );
         }
 
