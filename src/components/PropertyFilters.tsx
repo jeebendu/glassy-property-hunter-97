@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { propertyTypes, priceRanges, bedroomOptions, bathroomOptions, statusOptions } from '@/lib/data';
 import { cn } from '@/lib/utils';
@@ -36,20 +35,23 @@ const furnishingOptions = [
   { value: "fully-furnished", label: "Fully-Furnished" }
 ];
 
+// Define the filter state type for better type safety
+interface ActiveFilters {
+  type: string;
+  price: string;
+  bedrooms: string;
+  bathrooms: string;
+  status: string;
+  balcony: string;
+  readyToMove: string;
+  furnishing: string;
+  carpetArea: number[];
+  priceRange: number[];
+}
+
 const PropertyFilters = ({ onFilterChange }: PropertyFiltersProps) => {
   const [filtersOpen, setFiltersOpen] = useState(false);
-  const [activeFilters, setActiveFilters] = useState<{
-    type: string;
-    price: string;
-    bedrooms: string;
-    bathrooms: string;
-    status: string;
-    balcony: string;
-    readyToMove: string;
-    furnishing: string;
-    carpetArea: number[];
-    priceRange: number[];
-  }>({
+  const [activeFilters, setActiveFilters] = useState<ActiveFilters>({
     type: "all",
     price: "all",
     bedrooms: "all",
@@ -123,13 +125,13 @@ const PropertyFilters = ({ onFilterChange }: PropertyFiltersProps) => {
     onFilterChange(newFilters);
   };
 
-  const renderFilterOptions = (options: FilterOption[], filterType: string) => {
+  const renderFilterOptions = (options: FilterOption[], filterType: keyof ActiveFilters) => {
     return options.map(option => (
       <button
         key={option.value}
         className={cn(
           "filter-pill",
-          activeFilters[filterType as keyof typeof activeFilters] === option.value && "filter-pill-active"
+          activeFilters[filterType] === option.value && "filter-pill-active"
         )}
         onClick={() => handleFilterChange(filterType, option.value)}
       >

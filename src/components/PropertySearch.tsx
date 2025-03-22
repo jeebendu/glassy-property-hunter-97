@@ -20,6 +20,19 @@ import { useIsMobile } from '@/hooks/use-mobile';
 import { properties } from '@/lib/data';
 import DownloadApp from '@/components/DownloadApp';
 
+interface ActiveFilters {
+  type: string;
+  price: string;
+  bedrooms: string;
+  bathrooms: string;
+  status: string;
+  balcony: string;
+  readyToMove: string;
+  furnishing: string;
+  carpetArea: number[];
+  priceRange: number[];
+}
+
 const PropertySearch = ({ openAuthDialog }: { openAuthDialog: () => void }) => {
   const location = useLocation();
   const isMobile = useIsMobile();
@@ -29,18 +42,7 @@ const PropertySearch = ({ openAuthDialog }: { openAuthDialog: () => void }) => {
   const [showLocationDialog, setShowLocationDialog] = useState(false);
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [filteredProperties, setFilteredProperties] = useState(properties);
-  const [activeFilters, setActiveFilters] = useState<{
-    type: string;
-    price: string;
-    bedrooms: string;
-    bathrooms: string;
-    status: string;
-    balcony: string;
-    readyToMove: string;
-    furnishing: string;
-    carpetArea: number[];
-    priceRange: number[];
-  }>({
+  const [activeFilters, setActiveFilters] = useState<ActiveFilters>({
     type: "all",
     price: "all",
     bedrooms: "all",
@@ -55,7 +57,6 @@ const PropertySearch = ({ openAuthDialog }: { openAuthDialog: () => void }) => {
   
   const [selectedFilters, setSelectedFilters] = useState<{[key: string]: string | number[]}>({});
 
-  // Load search params from navigation state if available
   useEffect(() => {
     if (location.state) {
       if (location.state.searchTerm) setSearchTerm(location.state.searchTerm);
@@ -69,7 +70,6 @@ const PropertySearch = ({ openAuthDialog }: { openAuthDialog: () => void }) => {
   }, [activeFilters, searchTerm, activeTab, selectedLocation]);
   
   useEffect(() => {
-    // Convert activeFilters to selectedFilters for display
     const newSelectedFilters: {[key: string]: string | number[]} = {};
     
     Object.entries(activeFilters).forEach(([key, value]) => {
@@ -88,7 +88,6 @@ const PropertySearch = ({ openAuthDialog }: { openAuthDialog: () => void }) => {
   const filterProperties = () => {
     let filtered = [...properties];
     
-    // Filter by search term
     if (searchTerm) {
       filtered = filtered.filter(property => 
         property.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -96,12 +95,10 @@ const PropertySearch = ({ openAuthDialog }: { openAuthDialog: () => void }) => {
       );
     }
     
-    // Filter by property type
     if (activeFilters.type !== "all") {
       filtered = filtered.filter(property => property.type === activeFilters.type);
     }
     
-    // Filter by price range
     if (activeFilters.price !== "all") {
       const [min, max] = activeFilters.price.split('-').map(Number);
       filtered = filtered.filter(property => 
@@ -109,14 +106,12 @@ const PropertySearch = ({ openAuthDialog }: { openAuthDialog: () => void }) => {
       );
     }
     
-    // Filter by slider price range
     if (activeFilters.priceRange[0] > 0 || activeFilters.priceRange[1] < 10000000) {
       filtered = filtered.filter(property => 
         property.price >= activeFilters.priceRange[0] && property.price <= activeFilters.priceRange[1]
       );
     }
     
-    // Filter by carpet area
     if (activeFilters.carpetArea[0] > 0 || activeFilters.carpetArea[1] < 10000) {
       filtered = filtered.filter(property => {
         const area = property.squareFeet || (property.builtUpArea ? parseInt(property.builtUpArea) : 0);
@@ -124,7 +119,6 @@ const PropertySearch = ({ openAuthDialog }: { openAuthDialog: () => void }) => {
       });
     }
     
-    // Filter by bedrooms
     if (activeFilters.bedrooms !== "all") {
       if (activeFilters.bedrooms === "4+") {
         filtered = filtered.filter(property => property.bedrooms >= 4);
@@ -133,7 +127,6 @@ const PropertySearch = ({ openAuthDialog }: { openAuthDialog: () => void }) => {
       }
     }
     
-    // Filter by bathrooms
     if (activeFilters.bathrooms !== "all") {
       if (activeFilters.bathrooms === "3+") {
         filtered = filtered.filter(property => property.bathrooms >= 3);
@@ -142,7 +135,6 @@ const PropertySearch = ({ openAuthDialog }: { openAuthDialog: () => void }) => {
       }
     }
     
-    // Filter by balcony
     if (activeFilters.balcony !== "all") {
       if (activeFilters.balcony === "3+") {
         filtered = filtered.filter(property => 
@@ -155,7 +147,6 @@ const PropertySearch = ({ openAuthDialog }: { openAuthDialog: () => void }) => {
       }
     }
     
-    // Filter by ready to move
     if (activeFilters.readyToMove !== "all") {
       filtered = filtered.filter(property => 
         activeFilters.readyToMove === "ready" 
@@ -164,14 +155,12 @@ const PropertySearch = ({ openAuthDialog }: { openAuthDialog: () => void }) => {
       );
     }
     
-    // Filter by furnishing
     if (activeFilters.furnishing !== "all") {
       filtered = filtered.filter(property => 
         property.furnishType && property.furnishType.toLowerCase() === activeFilters.furnishing
       );
     }
     
-    // Filter by status
     if (activeFilters.status !== "all") {
       filtered = filtered.filter(property => property.status === activeFilters.status);
     }
@@ -204,7 +193,7 @@ const PropertySearch = ({ openAuthDialog }: { openAuthDialog: () => void }) => {
     } else if (key === "priceRange") {
       newFilters.priceRange = [0, 10000000];
     } else {
-      newFilters[key as keyof typeof newFilters] = "all";
+      newFilters[key as keyof ActiveFilters] = "all";
     }
     
     setActiveFilters(newFilters);
@@ -225,12 +214,9 @@ const PropertySearch = ({ openAuthDialog }: { openAuthDialog: () => void }) => {
       <Navbar openAuthDialog={openAuthDialog} />
 
       <div className="pt-20">
-        {/* Search Header - Reduced space */}
         <div className="bg-primary/5 py-4">
           <div className="container-custom">
-            {/* Search Form */}
             <div className="bg-white rounded-xl shadow-md overflow-hidden">
-              {/* Tabs */}
               <div className="flex border-b overflow-x-auto scrollbar-hide">
                 {['buy', 'rent', 'pg', 'commercial', 'plots'].map((tab) => (
                   <button
@@ -247,7 +233,6 @@ const PropertySearch = ({ openAuthDialog }: { openAuthDialog: () => void }) => {
                 ))}
               </div>
 
-              {/* Search Inputs */}
               <form onSubmit={handleSearch} className="flex flex-col md:flex-row">
                 <div className="flex items-center border-b md:border-b-0 md:border-r border-gray-200 px-4 py-3 w-full md:w-1/3">
                   <Dialog open={showLocationDialog} onOpenChange={setShowLocationDialog}>
@@ -290,7 +275,6 @@ const PropertySearch = ({ openAuthDialog }: { openAuthDialog: () => void }) => {
               </form>
             </div>
             
-            {/* Selected filters display */}
             {Object.keys(selectedFilters).length > 0 && (
               <div className="flex flex-wrap gap-2 mt-4">
                 {Object.entries(selectedFilters).map(([key, value]) => (
@@ -338,10 +322,8 @@ const PropertySearch = ({ openAuthDialog }: { openAuthDialog: () => void }) => {
           </div>
         </div>
 
-        {/* Search Results */}
         <div className="container-custom py-6">
           <div className="flex flex-col lg:flex-row gap-8">
-            {/* Filters */}
             {isMobile ? (
               <Sheet>
                 <SheetTrigger asChild>
@@ -366,7 +348,6 @@ const PropertySearch = ({ openAuthDialog }: { openAuthDialog: () => void }) => {
               </div>
             )}
             
-            {/* Results */}
             <div className="w-full lg:w-3/4">
               <div className="flex justify-between items-center mb-6">
                 <h2 className="text-xl font-semibold">{filteredProperties.length} Properties Found</h2>
@@ -410,7 +391,6 @@ const PropertySearch = ({ openAuthDialog }: { openAuthDialog: () => void }) => {
                 )}
               </div>
               
-              {/* Pagination */}
               {filteredProperties.length > 0 && (
                 <div className="mt-10 flex justify-center">
                   <div className="flex space-x-2">
@@ -436,7 +416,6 @@ const PropertySearch = ({ openAuthDialog }: { openAuthDialog: () => void }) => {
           </div>
         </div>
         
-        {/* Download App Section */}
         <DownloadApp />
       </div>
 

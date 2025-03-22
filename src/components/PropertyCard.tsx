@@ -9,9 +9,10 @@ import ShareButton from './ShareButton';
 interface PropertyCardProps {
   property: any;
   className?: string;
+  index?: number; // Added index as an optional prop
 }
 
-const PropertyCard = ({ property, className }: PropertyCardProps) => {
+const PropertyCard = ({ property, className, index }: PropertyCardProps) => {
   const [isFavorite, setIsFavorite] = React.useState(false);
   
   const handleFavorite = (e: React.MouseEvent) => {
