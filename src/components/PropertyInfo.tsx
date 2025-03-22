@@ -9,7 +9,7 @@ import {
   Calendar, 
   CheckCircle2, 
   Building, 
-  Parking, 
+  Car, 
   DollarSign, 
   CircleDollarSign,
   CreditCard,
@@ -98,7 +98,7 @@ const PropertyInfo: React.FC<PropertyInfoProps> = ({ property }) => {
                 )}
                 {property.coveredParking && (
                   <div className="flex items-center space-x-3">
-                    <Parking className="h-5 w-5 text-primary" />
+                    <Car className="h-5 w-5 text-primary" />
                     <span>{property.coveredParking} Parking</span>
                   </div>
                 )}
@@ -141,7 +141,7 @@ const PropertyInfo: React.FC<PropertyInfoProps> = ({ property }) => {
                   )}
                   {property.parkingCharges && (
                     <div className="flex items-center space-x-3">
-                      <Parking className="h-5 w-5 text-primary" />
+                      <Car className="h-5 w-5 text-primary" />
                       <span>Parking: {property.parkingCharges}</span>
                     </div>
                   )}
