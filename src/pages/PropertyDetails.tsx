@@ -4,8 +4,9 @@ import { useParams, Link } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { properties } from '@/lib/data';
-import { Bed, Bath, Square, MapPin, Calendar, Phone, Mail, ChevronLeft, ChevronRight, Heart } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Heart } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import PropertyInfo from '@/components/PropertyInfo';
 
 const PropertyDetails = () => {
   const { id } = useParams<{ id: string }>();
@@ -25,14 +26,6 @@ const PropertyDetails = () => {
       </div>
     );
   }
-  
-  const formatPrice = (price: number) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-      maximumFractionDigits: 0,
-    }).format(price);
-  };
   
   const nextImage = () => {
     setCurrentImageIndex((prev) => 
@@ -69,14 +62,19 @@ const PropertyDetails = () => {
           <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-8">
             <div>
               <h1 className="text-3xl font-bold mb-2">{property.title}</h1>
-              <div className="flex items-center text-muted-foreground">
-                <MapPin size={18} className="mr-1" />
-                <span>{property.address}</span>
+              <div className="text-muted-foreground">
+                <p>{property.address}</p>
               </div>
             </div>
             
             <div className="mt-4 lg:mt-0 flex items-center space-x-4">
-              <span className="text-3xl font-bold text-primary">{formatPrice(property.price)}</span>
+              <span className="text-3xl font-bold text-primary">
+                {property.status === "For Rent" ? `₹${property.price}/mo` : new Intl.NumberFormat('en-IN', {
+                  style: 'currency',
+                  currency: 'INR',
+                  maximumFractionDigits: 0,
+                }).format(property.price)}
+              </span>
               <button
                 className={cn(
                   "h-10 w-10 glass rounded-full flex items-center justify-center transition-all duration-300 hover:bg-white",
@@ -164,48 +162,8 @@ const PropertyDetails = () => {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Main Content */}
             <div className="lg:col-span-2">
-              {/* Features */}
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
-                <div className="glass p-4 rounded-xl flex flex-col items-center">
-                  <Bed size={24} className="text-primary mb-2" />
-                  <span className="text-sm text-muted-foreground">Bedrooms</span>
-                  <span className="text-lg font-semibold">{property.bedrooms}</span>
-                </div>
-                <div className="glass p-4 rounded-xl flex flex-col items-center">
-                  <Bath size={24} className="text-primary mb-2" />
-                  <span className="text-sm text-muted-foreground">Bathrooms</span>
-                  <span className="text-lg font-semibold">{property.bathrooms}</span>
-                </div>
-                <div className="glass p-4 rounded-xl flex flex-col items-center">
-                  <Square size={24} className="text-primary mb-2" />
-                  <span className="text-sm text-muted-foreground">Area</span>
-                  <span className="text-lg font-semibold">{property.squareFeet} sqft</span>
-                </div>
-                <div className="glass p-4 rounded-xl flex flex-col items-center">
-                  <Calendar size={24} className="text-primary mb-2" />
-                  <span className="text-sm text-muted-foreground">Year Built</span>
-                  <span className="text-lg font-semibold">{property.yearBuilt}</span>
-                </div>
-              </div>
-              
-              {/* Description */}
-              <div className="glass p-6 rounded-xl mb-10">
-                <h3 className="text-xl font-semibold mb-4">Description</h3>
-                <p className="text-muted-foreground mb-6">{property.description}</p>
-              </div>
-              
-              {/* Amenities */}
-              <div className="glass p-6 rounded-xl mb-10">
-                <h3 className="text-xl font-semibold mb-4">Amenities</h3>
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                  {property.amenities.map((amenity, index) => (
-                    <div key={index} className="flex items-center">
-                      <div className="h-2 w-2 rounded-full bg-primary mr-2"></div>
-                      <span>{amenity}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
+              {/* Detailed Property Info */}
+              <PropertyInfo property={property} />
             </div>
             
             {/* Sidebar */}
@@ -226,11 +184,9 @@ const PropertyDetails = () => {
                 
                 <div className="space-y-3 mb-6">
                   <div className="flex items-center">
-                    <Phone size={18} className="text-primary mr-3" />
                     <span>{property.agent.phone}</span>
                   </div>
                   <div className="flex items-center">
-                    <Mail size={18} className="text-primary mr-3" />
                     <span>{property.agent.email}</span>
                   </div>
                 </div>
@@ -259,14 +215,20 @@ const PropertyDetails = () => {
                           <div>
                             <h4 className="font-medium mb-1 group-hover:text-primary transition-colors">{p.title}</h4>
                             <p className="text-sm text-muted-foreground mb-1">{p.address}</p>
-                            <p className="text-sm font-semibold text-primary">{formatPrice(p.price)}</p>
+                            <p className="text-sm font-semibold text-primary">
+                              {p.status === "For Rent" ? `₹${p.price}/mo` : new Intl.NumberFormat('en-IN', {
+                                style: 'currency',
+                                currency: 'INR',
+                                maximumFractionDigits: 0,
+                              }).format(p.price)}
+                            </p>
                           </div>
                         </div>
                       </Link>
                     ))}
                 </div>
                 <div className="mt-4">
-                  <Link to="/properties" className="text-primary text-sm font-medium hover:underline">
+                  <Link to="/search" className="text-primary text-sm font-medium hover:underline">
                     View all similar properties
                   </Link>
                 </div>

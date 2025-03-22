@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
@@ -57,6 +56,24 @@ const PostProperty = () => {
     address: '',
     landmark: '',
     society: '',
+    floorNo: '',
+    coveredParking: '',
+    monthlyRent: '',
+    maintenanceCharges: '',
+    securityDeposit: '',
+    builtUpArea: '',
+    carpetArea: '',
+    parkingCharges: '',
+    facing: '',
+    servantRoom: 'No',
+    agencyName: '',
+    brokerNegotiable: 'Yes',
+    availableFrom: '',
+    preferredTenantType: 'Family',
+    flatFurnishings: '',
+    lockInPeriod: '',
+    nearbyLandmarks: '',
+    bhk: '',
     termsAccepted: false
   });
   
@@ -99,7 +116,6 @@ const PostProperty = () => {
   };
 
   const nextStep = () => {
-    // Move to next step without validation
     setCurrentStep(prev => prev + 1);
     window.scrollTo(0, 0);
   };
@@ -112,7 +128,6 @@ const PostProperty = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Submit the form without validation
     const completeData = {
       ...formData,
       images,
@@ -126,7 +141,6 @@ const PostProperty = () => {
     });
   };
 
-  // Step indicator component
   const StepIndicator = ({ step, title, subtitle, completed, active }: { 
     step: number, 
     title: string, 
@@ -164,7 +178,6 @@ const PostProperty = () => {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-              {/* Left sidebar with steps */}
               <div className="md:col-span-1">
                 <div className="glass rounded-xl p-6 space-y-8">
                   <StepIndicator 
@@ -198,17 +211,14 @@ const PostProperty = () => {
                 </div>
               </div>
 
-              {/* Main content - Form steps */}
               <div className="md:col-span-3">
                 <form onSubmit={handleSubmit} className="space-y-6">
-                  {/* Step 1: Basic Information */}
                   {currentStep === 1 && (
                     <div className="glass rounded-xl p-6 md:p-8">
                       <h2 className="text-xl font-semibold mb-2">General</h2>
                       <p className="text-muted-foreground text-sm mb-6">Basic information about property</p>
                       
                       <div className="space-y-6">
-                        {/* Property Category */}
                         <div>
                           <label className="block text-sm font-medium mb-2">Property Category*</label>
                           <div className="flex space-x-4">
@@ -226,7 +236,6 @@ const PostProperty = () => {
                           </div>
                         </div>
 
-                        {/* Looking For */}
                         <div>
                           <label className="block text-sm font-medium mb-2">Looking For*</label>
                           <div className="flex space-x-4">
@@ -244,7 +253,6 @@ const PostProperty = () => {
                           </div>
                         </div>
                         
-                        {/* Property Type */}
                         <div>
                           <label className="block text-sm font-medium mb-2">Property Type*</label>
                           <Select 
@@ -263,7 +271,6 @@ const PostProperty = () => {
                         </div>
                         
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                          {/* Bedrooms */}
                           <div>
                             <label className="block text-sm font-medium mb-2">Bed Rooms*</label>
                             <Select 
@@ -281,7 +288,6 @@ const PostProperty = () => {
                             </Select>
                           </div>
                           
-                          {/* Bathrooms */}
                           <div>
                             <label className="block text-sm font-medium mb-2">Bath Rooms*</label>
                             <Select 
@@ -300,7 +306,6 @@ const PostProperty = () => {
                           </div>
                         </div>
                         
-                        {/* Balcony */}
                         <div>
                           <label className="block text-sm font-medium mb-2">Balcony*</label>
                           <Select 
@@ -318,7 +323,6 @@ const PostProperty = () => {
                           </Select>
                         </div>
                         
-                        {/* Furnish Type */}
                         <div>
                           <label className="block text-sm font-medium mb-2">Furnish Type*</label>
                           <div className="flex space-x-4">
@@ -337,7 +341,6 @@ const PostProperty = () => {
                         </div>
                         
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                          {/* Price */}
                           <div>
                             <label className="block text-sm font-medium mb-2">Price*</label>
                             <Input 
@@ -347,7 +350,6 @@ const PostProperty = () => {
                             />
                           </div>
                           
-                          {/* Total Floors */}
                           <div>
                             <label className="block text-sm font-medium mb-2">Total Floors*</label>
                             <Select 
@@ -366,7 +368,6 @@ const PostProperty = () => {
                           </div>
                         </div>
                         
-                        {/* Description */}
                         <div>
                           <label className="block text-sm font-medium mb-2">Description</label>
                           <Textarea
@@ -386,14 +387,12 @@ const PostProperty = () => {
                     </div>
                   )}
 
-                  {/* Step 2: Location & Address */}
                   {currentStep === 2 && (
                     <div className="glass rounded-xl p-6 md:p-8">
                       <h2 className="text-xl font-semibold mb-2">Address</h2>
                       <p className="text-muted-foreground text-sm mb-6">Add your property location</p>
                       
                       <div className="space-y-6">
-                        {/* City */}
                         <div>
                           <label className="block text-sm font-medium mb-2">City*</label>
                           <Dialog>
@@ -412,7 +411,6 @@ const PostProperty = () => {
                           </Dialog>
                         </div>
                         
-                        {/* Search Location */}
                         <div>
                           <label className="block text-sm font-medium mb-2">Search your location*</label>
                           <Input 
@@ -422,7 +420,6 @@ const PostProperty = () => {
                           />
                         </div>
                         
-                        {/* Building Society */}
                         <div>
                           <label className="block text-sm font-medium mb-2">Building Society*</label>
                           <Input 
@@ -432,7 +429,6 @@ const PostProperty = () => {
                           />
                         </div>
                         
-                        {/* Google Map */}
                         <div className="border rounded-lg overflow-hidden h-64 bg-gray-100">
                           <div className="w-full h-full bg-gray-200 flex items-center justify-center">
                             <p className="text-gray-500">Google Map will be integrated here</p>
@@ -451,7 +447,6 @@ const PostProperty = () => {
                     </div>
                   )}
 
-                  {/* Step 3: Photos */}
                   {currentStep === 3 && (
                     <div className="glass rounded-xl p-6 md:p-8">
                       <h2 className="text-xl font-semibold mb-2">Gallery</h2>
@@ -520,34 +515,161 @@ const PostProperty = () => {
                     </div>
                   )}
 
-                  {/* Step 4: Confirmation */}
                   {currentStep === 4 && (
                     <div className="glass rounded-xl p-6 md:p-8">
                       <h2 className="text-xl font-semibold mb-2">Confirmation</h2>
                       <p className="text-muted-foreground text-sm mb-6">Review and submit your property listing</p>
                       
                       <div className="space-y-6">
-                        <div className="bg-gray-50 rounded-lg p-4 space-y-4">
-                          <h3 className="font-semibold">Property Summary</h3>
+                        <div>
+                          <h3 className="text-lg font-semibold mb-4">Property Address</h3>
+                          <p className="text-sm text-muted-foreground mb-4">
+                            {formData.society ? `${formData.society}, ` : ''}
+                            {formData.address ? `${formData.address}, ` : ''}
+                            {selectedLocation ? `${selectedLocation}, ` : ''}
+                            {formData.landmark ? `${formData.landmark}, ` : ''}
+                            Maharashtra
+                          </p>
                           
-                          <div className="grid grid-cols-2 gap-y-2">
-                            <div className="text-sm text-gray-500">Property Type:</div>
-                            <div className="text-sm">{formData.propertyType || '-'}</div>
+                          <div className="flex flex-wrap gap-6 mb-6">
+                            <div className="flex items-center">
+                              <span className="font-semibold">{formData.bedrooms || '2'} Bedrooms</span>
+                            </div>
+                            <div className="flex items-center">
+                              <span className="font-semibold">{formData.bathrooms || '2'} Bathrooms</span>
+                            </div>
+                            <div className="flex items-center">
+                              <span className="font-semibold">{formData.bhk || `${formData.bedrooms || '2'} BHK`}</span>
+                            </div>
+                            <div className="flex items-center">
+                              <span className="font-semibold">{formData.builtUpArea || '1007'} BuiltUpArea Sq ft</span>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        <div className="bg-gray-50 rounded-lg p-4">
+                          <h3 className="font-semibold mb-4">Property Details</h3>
+                          
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-5">
+                            <div className="flex justify-between border-b pb-2">
+                              <span className="text-muted-foreground">Property Type :</span>
+                              <span className="font-medium">{formData.propertyType || 'Apartment'}</span>
+                            </div>
                             
-                            <div className="text-sm text-gray-500">Location:</div>
-                            <div className="text-sm">{selectedLocation || '-'}</div>
+                            <div className="flex justify-between border-b pb-2">
+                              <span className="text-muted-foreground">Looking For :</span>
+                              <span className="font-medium">{formData.propertyFor === 'Rent' ? 'Rent' : 'Sale'}</span>
+                            </div>
                             
-                            <div className="text-sm text-gray-500">Price:</div>
-                            <div className="text-sm">₹{formData.price || '-'}</div>
+                            <div className="flex justify-between border-b pb-2">
+                              <span className="text-muted-foreground">Category :</span>
+                              <span className="font-medium">{formData.propertyCategory}</span>
+                            </div>
                             
-                            <div className="text-sm text-gray-500">Bedrooms:</div>
-                            <div className="text-sm">{formData.bedrooms || '-'}</div>
+                            <div className="flex justify-between border-b pb-2">
+                              <span className="text-muted-foreground">Balcony :</span>
+                              <span className="font-medium">{formData.balcony || '1'} Balcony</span>
+                            </div>
                             
-                            <div className="text-sm text-gray-500">Bathrooms:</div>
-                            <div className="text-sm">{formData.bathrooms || '-'}</div>
+                            <div className="flex justify-between border-b pb-2">
+                              <span className="text-muted-foreground">Bedrooms :</span>
+                              <span className="font-medium">{formData.bedrooms || '2'} Bedroom</span>
+                            </div>
                             
-                            <div className="text-sm text-gray-500">Furnishing:</div>
-                            <div className="text-sm">{formData.furnishType || '-'}</div>
+                            <div className="flex justify-between border-b pb-2">
+                              <span className="text-muted-foreground">Bathrooms :</span>
+                              <span className="font-medium">{formData.bathrooms || '2'} Bathroom</span>
+                            </div>
+                            
+                            <div className="flex justify-between border-b pb-2">
+                              <span className="text-muted-foreground">Preferred Tenant Type :</span>
+                              <span className="font-medium">{formData.preferredTenantType}</span>
+                            </div>
+                            
+                            <div className="flex justify-between border-b pb-2">
+                              <span className="text-muted-foreground">Furnishing :</span>
+                              <span className="font-medium">{formData.furnishType}</span>
+                            </div>
+                            
+                            <div className="flex justify-between border-b pb-2">
+                              <span className="text-muted-foreground">BHK :</span>
+                              <span className="font-medium">{formData.bhk || `${formData.bedrooms || '2'} BHK`}</span>
+                            </div>
+                            
+                            <div className="flex justify-between border-b pb-2">
+                              <span className="text-muted-foreground">Floor No :</span>
+                              <span className="font-medium">{formData.floorNo || '3'}</span>
+                            </div>
+                            
+                            <div className="flex justify-between border-b pb-2">
+                              <span className="text-muted-foreground">Covered Parking :</span>
+                              <span className="font-medium">{formData.coveredParking || '1'}</span>
+                            </div>
+                            
+                            <div className="flex justify-between border-b pb-2">
+                              <span className="text-muted-foreground">Monthly Rent :</span>
+                              <span className="font-medium">{formData.monthlyRent || '₹20,000.00'}</span>
+                            </div>
+                            
+                            <div className="flex justify-between border-b pb-2">
+                              <span className="text-muted-foreground">Maintenance Charges :</span>
+                              <span className="font-medium">{formData.maintenanceCharges || '₹0'}</span>
+                            </div>
+                            
+                            <div className="flex justify-between border-b pb-2">
+                              <span className="text-muted-foreground">Security Deposit :</span>
+                              <span className="font-medium">{formData.securityDeposit || '₹2'}</span>
+                            </div>
+                            
+                            <div className="flex justify-between border-b pb-2">
+                              <span className="text-muted-foreground">Built Up Area :</span>
+                              <span className="font-medium">{formData.builtUpArea || '1007'} Sq. ft.</span>
+                            </div>
+                            
+                            <div className="flex justify-between border-b pb-2">
+                              <span className="text-muted-foreground">Carpet Area :</span>
+                              <span className="font-medium">{formData.carpetArea || '805'} Sq. ft.</span>
+                            </div>
+                            
+                            <div className="flex justify-between border-b pb-2">
+                              <span className="text-muted-foreground">Parking Charges :</span>
+                              <span className="font-medium">{formData.parkingCharges || '₹0'}</span>
+                            </div>
+                            
+                            <div className="flex justify-between border-b pb-2">
+                              <span className="text-muted-foreground">Total Floors :</span>
+                              <span className="font-medium">{formData.totalFloors || '14'}</span>
+                            </div>
+                            
+                            <div className="flex justify-between border-b pb-2">
+                              <span className="text-muted-foreground">Nearby Landmarks :</span>
+                              <span className="font-medium">{formData.nearbyLandmarks || 'TCS'}</span>
+                            </div>
+                            
+                            <div className="flex justify-between border-b pb-2">
+                              <span className="text-muted-foreground">Facing :</span>
+                              <span className="font-medium">{formData.facing || 'East'}</span>
+                            </div>
+                            
+                            <div className="flex justify-between border-b pb-2">
+                              <span className="text-muted-foreground">Servant Room :</span>
+                              <span className="font-medium">{formData.servantRoom}</span>
+                            </div>
+                            
+                            <div className="flex justify-between border-b pb-2">
+                              <span className="text-muted-foreground">Agency Name :</span>
+                              <span className="font-medium">{formData.agencyName || 'Navnath'}</span>
+                            </div>
+                            
+                            <div className="flex justify-between border-b pb-2">
+                              <span className="text-muted-foreground">Broker Negotiable :</span>
+                              <span className="font-medium">{formData.brokerNegotiable}</span>
+                            </div>
+                            
+                            <div className="flex justify-between border-b pb-2">
+                              <span className="text-muted-foreground">Available From :</span>
+                              <span className="font-medium">{formData.availableFrom || '09-01-2025'}</span>
+                            </div>
                           </div>
                         </div>
                         
@@ -582,7 +704,6 @@ const PostProperty = () => {
           </div>
         </div>
         
-        {/* Download App Section */}
         <div className="mt-16">
           <DownloadApp />
         </div>

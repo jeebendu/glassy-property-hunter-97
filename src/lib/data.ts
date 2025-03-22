@@ -1,4 +1,3 @@
-
 export interface Property {
   id: string;
   title: string;
@@ -20,25 +19,69 @@ export interface Property {
   };
   amenities: string[];
   yearBuilt: number;
+  bhk?: string;
+  balcony?: string;
+  furnishType?: string;
+  floorNo?: string;
+  coveredParking?: string;
+  monthlyRent?: string;
+  maintenanceCharges?: string;
+  securityDeposit?: string;
+  builtUpArea?: string;
+  carpetArea?: string;
+  parkingCharges?: string;
+  totalFloors?: string;
+  nearbyLandmarks?: string;
+  facing?: string;
+  servantRoom?: string;
+  agencyName?: string;
+  brokerNegotiable?: string;
+  availableFrom?: string;
+  preferredTenantType?: string;
+  category?: string;
+  flatFurnishings?: string;
+  lockInPeriod?: string;
+  chargeBrokerage?: string;
+  rearId?: string;
 }
 
 export const properties: Property[] = [
   {
     id: "1",
     title: "Modern Luxury Villa",
-    address: "123 Oceanview Drive, Malibu, CA",
+    address: "BLOCK-A3, MEGAPOLIS SPLENDOUR, Phase 3, Hinjawadi Rajiv Gandhi Infotech Park, Hinjawadi, Pimpri Chinchwad, Maharashtra 411057, India, Megapolis, Pune, Pune, Maharashtra",
     price: 4750000,
-    bedrooms: 5,
-    bathrooms: 4.5,
-    squareFeet: 4200,
+    bedrooms: 2,
+    bathrooms: 2,
+    squareFeet: 1007,
+    bhk: "2 BHK",
+    balcony: "1 Balcony",
+    furnishType: "Semi Furnished",
+    floorNo: "3",
+    coveredParking: "1",
+    monthlyRent: "₹20,000.00",
+    maintenanceCharges: "₹0",
+    securityDeposit: "₹2",
+    builtUpArea: "1007 Sq. ft.",
+    carpetArea: "805 Sq. ft.",
+    parkingCharges: "₹0",
+    totalFloors: "14",
+    nearbyLandmarks: "TCS",
+    facing: "East",
+    servantRoom: "No",
+    agencyName: "Navnath",
+    brokerNegotiable: "Yes",
+    availableFrom: "09-01-2025",
+    preferredTenantType: "Family",
+    category: "Residential",
     description: "Stunning modern villa with panoramic ocean views. This architectural masterpiece features floor-to-ceiling windows, an infinity pool, and a gourmet kitchen with top-of-the-line appliances.",
     images: [
       "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?q=80&w=2075&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?q=80&w=2053&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?q=80&w=2070&auto=format&fit=crop"
     ],
-    type: "House",
-    status: "For Sale",
+    type: "Apartment",
+    status: "For Rent",
     featured: true,
     agent: {
       name: "Jennifer Lopez",
@@ -221,3 +264,4 @@ export const statusOptions = [
   { value: "Pending", label: "Pending" },
   { value: "Sold", label: "Sold" }
 ];
+
