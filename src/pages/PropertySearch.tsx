@@ -133,7 +133,7 @@ const PropertySearch = () => {
             <div className="bg-white rounded-xl shadow-md overflow-hidden">
               {/* Tabs */}
               <div className="flex border-b overflow-x-auto scrollbar-hide">
-                {['buy', 'rent', 'commercial', 'pg/co-living', 'plots'].map((tab) => (
+                {['buy', 'rent', 'commercial', 'pg', 'plots'].map((tab) => (
                   <button
                     key={tab}
                     className={`px-4 py-3 font-medium whitespace-nowrap transition-colors ${

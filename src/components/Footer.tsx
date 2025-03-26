@@ -96,7 +96,7 @@ const Footer = () => {
               </li>
               <li className="flex items-center">
                 <Mail size={20} className="text-primary mr-3 flex-shrink-0" />
-                <span className="text-muted-foreground">info@primeestate.com</span>
+                <span className="text-muted-foreground">info@Proptify.com</span>
               </li>
             </ul>
           </div>
@@ -106,7 +106,7 @@ const Footer = () => {
         <div className="pt-8 border-t border-gray-200">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <p className="text-muted-foreground text-sm mb-4 md:mb-0">
-              © {new Date().getFullYear()} PrimeEstate. All rights reserved.
+              © {new Date().getFullYear()} Proptify. All rights reserved.
             </p>
             <div className="flex space-x-6">
               <Link to="/privacy" className="text-muted-foreground text-sm hover:text-primary transition-colors duration-300">

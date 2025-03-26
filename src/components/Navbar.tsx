@@ -148,10 +148,10 @@ const Navbar = () => {
       <div className="container-custom flex justify-between items-center">
         <div className="flex items-center">
           <Link to="/" className="flex items-center">
-            <span className="text-2xl font-bold tracking-tight text-primary">Prime<span className={cn(
+            <span className="text-2xl font-bold tracking-tight text-primary">Proptify<span className={cn(
               "transition-colors",
               (!scrolled && isHomePage) ? "text-white" : "text-foreground"
-            )}>Estate</span></span>
+            )}>.in</span></span>
           </Link>
 
           {/* Mobile Location Selector */}

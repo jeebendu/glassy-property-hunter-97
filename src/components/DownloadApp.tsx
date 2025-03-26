@@ -34,7 +34,7 @@ const DownloadApp = () => {
             <div className="relative h-[400px] w-[300px] glass rounded-3xl overflow-hidden shadow-xl mx-auto">
               <img 
                 src="/placeholder.svg" 
-                alt="PrimeEstate Mobile App" 
+                alt="Proptify Mobile App" 
                 className="w-full h-full object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
