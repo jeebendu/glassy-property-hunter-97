@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useLocation, Link } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
@@ -47,7 +46,6 @@ const PropertySearch = () => {
     status: "all"
   });
 
-  // Load search params from navigation state if available
   useEffect(() => {
     if (location.state) {
       if (location.state.searchTerm) setSearchTerm(location.state.searchTerm);
@@ -61,7 +59,6 @@ const PropertySearch = () => {
   }, [activeFilters, searchTerm, activeTab, selectedLocation]);
 
   useEffect(() => {
-    // Reset pagination when filters change
     setPage(1);
     loadMoreProperties(1, true);
   }, [filteredProperties]);
@@ -69,7 +66,6 @@ const PropertySearch = () => {
   const filterProperties = () => {
     let filtered = [...properties];
     
-    // Filter by search term
     if (searchTerm) {
       filtered = filtered.filter(property => 
         property.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -77,12 +73,10 @@ const PropertySearch = () => {
       );
     }
     
-    // Filter by property type
     if (activeFilters.type !== "all") {
       filtered = filtered.filter(property => property.type === activeFilters.type);
     }
     
-    // Filter by price range
     if (activeFilters.price !== "all") {
       const [min, max] = activeFilters.price.split('-').map(Number);
       filtered = filtered.filter(property => 
@@ -90,7 +84,6 @@ const PropertySearch = () => {
       );
     }
     
-    // Filter by bedrooms
     if (activeFilters.bedrooms !== "all") {
       if (activeFilters.bedrooms === "4+") {
         filtered = filtered.filter(property => property.bedrooms >= 4);
@@ -99,7 +92,6 @@ const PropertySearch = () => {
       }
     }
     
-    // Filter by bathrooms
     if (activeFilters.bathrooms !== "all") {
       if (activeFilters.bathrooms === "3+") {
         filtered = filtered.filter(property => property.bathrooms >= 3);
@@ -108,7 +100,6 @@ const PropertySearch = () => {
       }
     }
     
-    // Filter by status
     if (activeFilters.status !== "all") {
       filtered = filtered.filter(property => property.status === activeFilters.status);
     }
@@ -119,7 +110,6 @@ const PropertySearch = () => {
   const loadMoreProperties = (pageNumber: number = page, reset: boolean = false) => {
     setIsLoading(true);
     
-    // Simulate API call with setTimeout
     setTimeout(() => {
       const startIndex = reset ? 0 : (pageNumber - 1) * propertiesPerPage;
       const endIndex = pageNumber * propertiesPerPage;
@@ -162,14 +152,11 @@ const PropertySearch = () => {
       <Navbar />
 
       <div className="pt-24">
-        {/* Search Header */}
         <div className="bg-primary/5 py-8">
           <div className="container-custom">
             <h1 className="text-3xl font-bold mb-6">Property Search</h1>
             
-            {/* Search Form */}
             <div className="bg-white rounded-xl shadow-md overflow-hidden">
-              {/* Tabs */}
               <div className="flex border-b overflow-x-auto scrollbar-hide">
                 {['buy', 'rent', 'commercial', 'pg', 'plots'].map((tab) => (
                   <button
@@ -186,7 +173,6 @@ const PropertySearch = () => {
                 ))}
               </div>
 
-              {/* Search Inputs */}
               <form onSubmit={handleSearch} className="flex flex-col md:flex-row">
                 <div className="flex items-center border-b md:border-b-0 md:border-r border-gray-200 px-4 py-3 w-full md:w-1/3">
                   <Dialog open={showLocationDialog} onOpenChange={setShowLocationDialog}>
@@ -231,10 +217,8 @@ const PropertySearch = () => {
           </div>
         </div>
 
-        {/* Search Results */}
         <div className="container-custom py-8">
           <div className="flex flex-col lg:flex-row gap-8">
-            {/* Filters */}
             {isMobile ? (
               <Sheet>
                 <SheetTrigger asChild>
@@ -256,16 +240,14 @@ const PropertySearch = () => {
               </div>
             )}
             
-            {/* Results */}
             <div className="w-full lg:w-3/4">
+              <ActiveFilters 
+                filters={activeFilters}
+                onRemoveFilter={handleRemoveFilter}
+              />
               <div className="flex justify-between items-center mb-6">
                 <div>
                   <h2 className="text-xl font-semibold">{filteredProperties.length} Properties Found</h2>
-                  {/* Active filters display */}
-                  <ActiveFilters 
-                    filters={activeFilters}
-                    onRemoveFilter={handleRemoveFilter}
-                  />
                 </div>
                 <div className="flex items-center">
                   <span className="text-sm text-muted-foreground mr-2">Sort by:</span>
@@ -332,7 +314,6 @@ const PropertySearch = () => {
           </div>
         </div>
         
-        {/* Download App Section */}
         <DownloadApp />
       </div>
 
