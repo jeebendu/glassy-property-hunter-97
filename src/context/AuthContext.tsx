@@ -1,9 +1,15 @@
-
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { authService } from '@/services/auth';
 import { toast } from '@/hooks/use-toast';
 import { GoogleLogin } from '@react-oauth/google';
 import { jwtDecode } from 'jwt-decode';
+
+interface GoogleJwtPayload {
+  email: string;
+  name: string;
+  picture: string;
+  [key: string]: any;
+}
 
 type Credentials = {
   email: string;
@@ -56,7 +62,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [loginEmail, setLoginEmail] = useState<string | null>(null);
 
   useEffect(() => {
-    // Check if user is already logged in
     const storedUser = authService.getCurrentUser();
     if (storedUser) {
       setUser(storedUser);
@@ -122,7 +127,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   const login = async (credentials: Credentials) => {
-    // This is kept for compatibility but we'll use sendOtp and verifyOtp instead
     setIsLoading(true);
     try {
       const { authToken } = await authService.sendOtp(credentials.email);
@@ -187,7 +191,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const googleLogin = async (response: any) => {
     setIsLoading(true);
     try {
-      const decoded = jwtDecode(response.credential);
+      const decoded = jwtDecode(response.credential) as GoogleJwtPayload;
       const userData = await authService.googleLogin({
         email: decoded.email,
         name: decoded.name,
