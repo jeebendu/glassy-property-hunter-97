@@ -1,4 +1,3 @@
-
 type Credentials = {
   email: string;
   password?: string;
@@ -19,6 +18,7 @@ type UserData = {
   idToken?: string;
   roles?: Array<{id: number; name: string; permissions: Array<{id: number; name: string}>}>;
   gender?: string;
+  photoUrl?: string;
 };
 
 // API service integration
