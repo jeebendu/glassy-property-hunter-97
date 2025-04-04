@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { authService } from '@/services/auth';
 import { toast } from '@/hooks/use-toast';
@@ -26,7 +27,7 @@ type UserData = {
 };
 
 interface AuthContextType {
-  user: UserData;
+  user: UserData | null;
   isLoading: boolean;
   otpSent: boolean;
   authToken: string | null;
@@ -41,7 +42,7 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const [user, setUser] = useState<UserData>(null);
+  const [user, setUser] = useState<UserData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [otpSent, setOtpSent] = useState(false);
   const [authToken, setAuthToken] = useState<string | null>(null);
