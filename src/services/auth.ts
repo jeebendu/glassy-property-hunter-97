@@ -1,3 +1,6 @@
+
+import api from './api';
+
 type Credentials = {
   email: string;
   password?: string;
@@ -26,19 +29,8 @@ export const authService = {
   // Send OTP to email
   async sendOtp(email: string, reason: string = "Log-in"): Promise<{status: boolean; message: string}> {
     try {
-      const response = await fetch('https://uhapi.jeebendu.com/v1/public/auth/sendOtp', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, reason }),
-      });
-      
-      if (!response.ok) {
-        throw new Error('Failed to send OTP');
-      }
-      
-      return await response.json();
+      const response = await api.post('/public/auth/sendOtp', { email, reason });
+      return response.data;
     } catch (error) {
       console.error('OTP request error:', error);
       throw error;
@@ -48,19 +40,8 @@ export const authService = {
   // Login with OTP
   async verifyOtp(credentials: Credentials): Promise<UserData> {
     try {
-      const response = await fetch('https://uhapi.jeebendu.com/v1/public/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(credentials),
-      });
-      
-      if (!response.ok) {
-        throw new Error('OTP verification failed');
-      }
-      
-      const userData = await response.json();
+      const response = await api.post('/public/auth/login', credentials);
+      const userData = response.data;
       
       // Store user data and token
       localStorage.setItem('user', JSON.stringify(userData));
@@ -80,19 +61,8 @@ export const authService = {
     try {
       // This is now handled by the OTP flow
       // This method is kept for backward compatibility
-      const response = await fetch('/api/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(credentials),
-      });
-      
-      if (!response.ok) {
-        throw new Error('Login failed');
-      }
-      
-      return await response.json();
+      const response = await api.post('/api/login', credentials);
+      return response.data;
     } catch (error) {
       console.error('Login error:', error);
       throw error;
@@ -103,19 +73,8 @@ export const authService = {
   async register(credentials: Credentials): Promise<UserData> {
     try {
       // This would be integrated with the API as needed
-      const response = await fetch('/api/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(credentials),
-      });
-      
-      if (!response.ok) {
-        throw new Error('Registration failed');
-      }
-      
-      return await response.json();
+      const response = await api.post('/api/register', credentials);
+      return response.data;
     } catch (error) {
       console.error('Registration error:', error);
       throw error;
