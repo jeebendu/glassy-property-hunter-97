@@ -5,6 +5,8 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import PropertyFilters from '@/components/PropertyFilters';
 import PropertyCard from '@/components/PropertyCard';
+import ActiveFilters from '@/components/ActiveFilters';
+import InfiniteScroll from '@/components/InfiniteScroll';
 import { Search, MapPin, ChevronDown, X } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -20,6 +22,7 @@ import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { properties } from '@/lib/data';
 import DownloadApp from '@/components/DownloadApp';
+import { Skeleton } from '@/components/ui/skeleton';
 
 const PropertySearch = () => {
   const location = useLocation();
@@ -30,6 +33,12 @@ const PropertySearch = () => {
   const [showLocationDialog, setShowLocationDialog] = useState(false);
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [filteredProperties, setFilteredProperties] = useState(properties);
+  const [displayedProperties, setDisplayedProperties] = useState<typeof properties>([]);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
+  const propertiesPerPage = 6;
+  
   const [activeFilters, setActiveFilters] = useState({
     type: "all",
     price: "all",
@@ -50,6 +59,12 @@ const PropertySearch = () => {
   useEffect(() => {
     filterProperties();
   }, [activeFilters, searchTerm, activeTab, selectedLocation]);
+
+  useEffect(() => {
+    // Reset pagination when filters change
+    setPage(1);
+    loadMoreProperties(1, true);
+  }, [filteredProperties]);
 
   const filterProperties = () => {
     let filtered = [...properties];
@@ -101,6 +116,22 @@ const PropertySearch = () => {
     setFilteredProperties(filtered);
   };
 
+  const loadMoreProperties = (pageNumber: number = page, reset: boolean = false) => {
+    setIsLoading(true);
+    
+    // Simulate API call with setTimeout
+    setTimeout(() => {
+      const startIndex = reset ? 0 : (pageNumber - 1) * propertiesPerPage;
+      const endIndex = pageNumber * propertiesPerPage;
+      const newBatch = filteredProperties.slice(startIndex, endIndex);
+      
+      setDisplayedProperties(prev => reset ? newBatch : [...prev, ...newBatch]);
+      setHasMore(endIndex < filteredProperties.length);
+      setPage(pageNumber + 1);
+      setIsLoading(false);
+    }, 800);
+  };
+
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (!selectedLocation) {
@@ -117,6 +148,13 @@ const PropertySearch = () => {
   
   const handleFilterChange = (filters: any) => {
     setActiveFilters(filters);
+  };
+  
+  const handleRemoveFilter = (filterType: string) => {
+    setActiveFilters(prev => ({
+      ...prev,
+      [filterType]: "all"
+    }));
   };
 
   return (
@@ -183,7 +221,7 @@ const PropertySearch = () => {
                 <div className="px-4 py-3">
                   <Button
                     type="submit"
-                    className="bg-emerald-500 hover:bg-emerald-600 text-white font-semibold rounded-full px-8"
+                    className="bg-primary hover:bg-primary/90 text-white font-semibold rounded-full px-8"
                   >
                     Search
                   </Button>
@@ -221,7 +259,14 @@ const PropertySearch = () => {
             {/* Results */}
             <div className="w-full lg:w-3/4">
               <div className="flex justify-between items-center mb-6">
-                <h2 className="text-xl font-semibold">{filteredProperties.length} Properties Found</h2>
+                <div>
+                  <h2 className="text-xl font-semibold">{filteredProperties.length} Properties Found</h2>
+                  {/* Active filters display */}
+                  <ActiveFilters 
+                    filters={activeFilters}
+                    onRemoveFilter={handleRemoveFilter}
+                  />
+                </div>
                 <div className="flex items-center">
                   <span className="text-sm text-muted-foreground mr-2">Sort by:</span>
                   <select className="text-sm border-none bg-transparent focus:ring-0">
@@ -233,46 +278,56 @@ const PropertySearch = () => {
                 </div>
               </div>
               
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
-                {filteredProperties.length > 0 ? (
-                  filteredProperties.map(property => (
-                    <PropertyCard key={property.id} property={property} />
-                  ))
-                ) : (
-                  <div className="col-span-full py-12 text-center">
-                    <p className="text-muted-foreground text-lg">No properties found matching your criteria</p>
-                    <button 
-                      onClick={filterProperties} 
-                      className="mt-4 px-4 py-2 text-primary border border-primary rounded-md hover:bg-primary/5"
-                    >
-                      Reset Filters
-                    </button>
+              <InfiniteScroll
+                onLoadMore={() => loadMoreProperties()}
+                hasMore={hasMore}
+                isLoading={isLoading}
+                loadingComponent={
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                    {[1, 2].map((i) => (
+                      <div key={i} className="property-card overflow-hidden">
+                        <Skeleton className="h-60 w-full" />
+                        <div className="p-6">
+                          <Skeleton className="h-6 w-3/4 mb-2" />
+                          <Skeleton className="h-4 w-1/2 mb-4" />
+                          <div className="flex gap-2 mb-4">
+                            <Skeleton className="h-6 w-16" />
+                            <Skeleton className="h-6 w-16" />
+                          </div>
+                          <Skeleton className="h-10 w-full mt-4" />
+                        </div>
+                      </div>
+                    ))}
                   </div>
-                )}
-              </div>
-              
-              {/* Pagination */}
-              {filteredProperties.length > 0 && (
-                <div className="mt-10 flex justify-center">
-                  <div className="flex space-x-2">
-                    <button className="w-10 h-10 rounded-full border flex items-center justify-center text-muted-foreground hover:border-primary hover:text-primary transition-colors">
-                      &laquo;
-                    </button>
-                    <button className="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center">
-                      1
-                    </button>
-                    <button className="w-10 h-10 rounded-full border flex items-center justify-center text-muted-foreground hover:border-primary hover:text-primary transition-colors">
-                      2
-                    </button>
-                    <button className="w-10 h-10 rounded-full border flex items-center justify-center text-muted-foreground hover:border-primary hover:text-primary transition-colors">
-                      3
-                    </button>
-                    <button className="w-10 h-10 rounded-full border flex items-center justify-center text-muted-foreground hover:border-primary hover:text-primary transition-colors">
-                      &raquo;
-                    </button>
-                  </div>
+                }
+              >
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
+                  {displayedProperties.length > 0 ? (
+                    displayedProperties.map(property => (
+                      <PropertyCard key={property.id} property={property} />
+                    ))
+                  ) : (
+                    <div className="col-span-full py-12 text-center">
+                      <p className="text-muted-foreground text-lg">No properties found matching your criteria</p>
+                      <button 
+                        onClick={() => {
+                          setActiveFilters({
+                            type: "all",
+                            price: "all",
+                            bedrooms: "all",
+                            bathrooms: "all",
+                            status: "all"
+                          });
+                          setSearchTerm('');
+                        }} 
+                        className="mt-4 px-4 py-2 text-primary border border-primary rounded-md hover:bg-primary/5"
+                      >
+                        Reset Filters
+                      </button>
+                    </div>
+                  )}
                 </div>
-              )}
+              </InfiniteScroll>
             </div>
           </div>
         </div>

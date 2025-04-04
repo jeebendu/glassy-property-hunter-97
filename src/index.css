@@ -14,7 +14,7 @@
     --popover: 0 0% 100%;
     --popover-foreground: 222 47% 11%;
     
-    --primary: 210 100% 50%;
+    --primary: 142 76% 36%; /* Changed to emerald-600 */
     --primary-foreground: 210 40% 98%;
     
     --secondary: 210 40% 96%;
@@ -31,7 +31,7 @@
     
     --border: 214 32% 91%;
     --input: 214 32% 91%;
-    --ring: 222 84% 5%;
+    --ring: 142 76% 36%; /* Changed to match primary */
     
     --radius: 1rem;
   }
