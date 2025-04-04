@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { authService } from '@/services/auth';
 import { toast } from '@/hooks/use-toast';
@@ -23,7 +22,8 @@ type UserData = {
   idToken?: string;
   roles?: Array<{id: number; name: string; permissions: Array<{id: number; name: string}>}>;
   gender?: string;
-} | null;
+  photoUrl?: string;
+};
 
 interface AuthContextType {
   user: UserData;
@@ -47,7 +47,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [authToken, setAuthToken] = useState<string | null>(null);
 
   useEffect(() => {
-    // Check if user is already logged in
     const storedUser = authService.getCurrentUser();
     if (storedUser) {
       setUser(storedUser);
@@ -60,7 +59,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     try {
       const response = await authService.sendOtp(email);
       
-      // Extract auth token from message (expected format: "token::OTP sent to your mail")
       const tokenParts = response.message.split('::');
       if (tokenParts.length > 1) {
         const extractedToken = tokenParts[0];
@@ -94,7 +92,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         phone: null,
       });
       
-      // Create a standardized user object
       const formattedUser = {
         name: userData.name || `${userData.firstName || ''} ${userData.lastName || ''}`.trim(),
         email: userData.email,
@@ -123,7 +120,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   const login = async (credentials: Credentials) => {
-    // This is now replaced by the OTP flow
     setIsLoading(true);
     try {
       await sendOtp(credentials.email);
@@ -178,8 +174,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   const googleLogin = async () => {
-    // This would normally handle Google OAuth flow
-    // For now, we'll simulate a successful login
     const mockGoogleUser = {
       id: 'google-123',
       name: 'Google User',
