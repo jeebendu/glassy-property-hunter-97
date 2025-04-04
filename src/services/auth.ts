@@ -1,22 +1,85 @@
 
 type Credentials = {
   email: string;
-  password: string;
+  password?: string;
+  phone?: string;
+  otp?: string;
+  authToken?: string;
 };
 
 type UserData = {
-  id: string;
+  id?: string;
   name: string;
   email: string;
   avatar?: string;
+  phone?: string;
+  firstName?: string;
+  lastName?: string;
+  provider?: string;
+  idToken?: string;
+  roles?: Array<{id: number; name: string; permissions: Array<{id: number; name: string}>}>;
+  gender?: string;
 };
 
-// Mock auth service - replace with your actual API integration
+// API service integration
 export const authService = {
-  // Normal login
+  // Send OTP to email
+  async sendOtp(email: string, reason: string = "Log-in"): Promise<{status: boolean; message: string}> {
+    try {
+      const response = await fetch('https://uhapi.jeebendu.com/v1/public/auth/sendOtp', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, reason }),
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to send OTP');
+      }
+      
+      return await response.json();
+    } catch (error) {
+      console.error('OTP request error:', error);
+      throw error;
+    }
+  },
+  
+  // Login with OTP
+  async verifyOtp(credentials: Credentials): Promise<UserData> {
+    try {
+      const response = await fetch('https://uhapi.jeebendu.com/v1/public/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(credentials),
+      });
+      
+      if (!response.ok) {
+        throw new Error('OTP verification failed');
+      }
+      
+      const userData = await response.json();
+      
+      // Store user data and token
+      localStorage.setItem('user', JSON.stringify(userData));
+      if (userData.idToken) {
+        localStorage.setItem('token', userData.idToken);
+      }
+      
+      return userData;
+    } catch (error) {
+      console.error('OTP verification error:', error);
+      throw error;
+    }
+  },
+  
+  // Normal login - legacy
   async login(credentials: Credentials): Promise<UserData> {
     try {
-      // Replace with actual API call
+      // This is now handled by the OTP flow
+      // This method is kept for backward compatibility
       const response = await fetch('/api/login', {
         method: 'POST',
         headers: {
@@ -36,10 +99,10 @@ export const authService = {
     }
   },
   
-  // Register
+  // Register - legacy
   async register(credentials: Credentials): Promise<UserData> {
     try {
-      // Replace with actual API call
+      // This would be integrated with the API as needed
       const response = await fetch('/api/register', {
         method: 'POST',
         headers: {
@@ -61,7 +124,6 @@ export const authService = {
   
   // Logout
   async logout(): Promise<void> {
-    // Replace with actual API call if needed
     localStorage.removeItem('user');
     localStorage.removeItem('token');
   },

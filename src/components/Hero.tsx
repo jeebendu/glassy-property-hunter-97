@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Search, MapPin, ChevronDown, AppleIcon, PlayCircle } from 'lucide-react';
 import { useAnimationOnScroll } from '@/lib/animations';
@@ -161,7 +160,7 @@ const Hero = () => {
           {/* Search Form - Mobile */}
           <div
             ref={searchAnimation.ref}
-            className={`${searchAnimation.animationClass} md:hidden mt-8 px-4`}
+            className={`${searchAnimation.animationClass} md:hidden mt-8`}
           >
             <form onSubmit={handleSearch} className="relative">
               <Input
@@ -173,7 +172,7 @@ const Hero = () => {
               />
               <Button
                 type="submit"
-                className="absolute right-1 top-1 bottom-1 rounded-full bg-emerald-500 hover:bg-emerald-600 aspect-square p-0 min-w-12"
+                className="absolute right-1 top-1 bottom-1 rounded-full bg-primary hover:bg-primary/90 aspect-square p-0 min-w-12"
               >
                 <Search size={20} />
               </Button>

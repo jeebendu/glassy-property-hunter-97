@@ -5,19 +5,33 @@ import { toast } from '@/hooks/use-toast';
 
 type Credentials = {
   email: string;
-  password: string;
+  password?: string;
+  phone?: string;
+  otp?: string;
+  authToken?: string;
 };
 
 type UserData = {
-  id: string;
+  id?: string;
   name: string;
   email: string;
   avatar?: string;
+  phone?: string;
+  firstName?: string;
+  lastName?: string;
+  provider?: string;
+  idToken?: string;
+  roles?: Array<{id: number; name: string; permissions: Array<{id: number; name: string}>}>;
+  gender?: string;
 } | null;
 
 interface AuthContextType {
   user: UserData;
   isLoading: boolean;
+  otpSent: boolean;
+  authToken: string | null;
+  sendOtp: (email: string) => Promise<void>;
+  verifyOtp: (email: string, otp: string) => Promise<void>;
   login: (credentials: Credentials) => Promise<void>;
   register: (credentials: Credentials) => Promise<void>;
   logout: () => Promise<void>;
@@ -29,6 +43,8 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<UserData>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [otpSent, setOtpSent] = useState(false);
+  const [authToken, setAuthToken] = useState<string | null>(null);
 
   useEffect(() => {
     // Check if user is already logged in
@@ -39,21 +55,83 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     setIsLoading(false);
   }, []);
 
-  const login = async (credentials: Credentials) => {
+  const sendOtp = async (email: string) => {
     setIsLoading(true);
     try {
-      const userData = await authService.login(credentials);
-      localStorage.setItem('user', JSON.stringify(userData));
-      setUser(userData);
+      const response = await authService.sendOtp(email);
+      
+      // Extract auth token from message (expected format: "token::OTP sent to your mail")
+      const tokenParts = response.message.split('::');
+      if (tokenParts.length > 1) {
+        const extractedToken = tokenParts[0];
+        setAuthToken(extractedToken);
+      }
+      
+      setOtpSent(true);
       toast({
-        title: "Success!",
-        description: "You have successfully logged in.",
+        title: "OTP Sent!",
+        description: "Please check your email for the OTP",
       });
     } catch (error) {
       toast({
         variant: "destructive",
+        title: "Failed to send OTP",
+        description: "Please check your email and try again",
+      });
+      throw error;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const verifyOtp = async (email: string, otp: string) => {
+    setIsLoading(true);
+    try {
+      const userData = await authService.verifyOtp({
+        email,
+        otp,
+        authToken: authToken || undefined,
+        phone: null,
+      });
+      
+      // Create a standardized user object
+      const formattedUser = {
+        name: userData.name || `${userData.firstName || ''} ${userData.lastName || ''}`.trim(),
+        email: userData.email,
+        avatar: userData.photoUrl,
+        ...userData,
+      };
+      
+      setUser(formattedUser);
+      setOtpSent(false);
+      setAuthToken(null);
+      
+      toast({
+        title: "Success!",
+        description: "You have successfully logged in",
+      });
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Verification failed",
+        description: "Invalid OTP. Please try again",
+      });
+      throw error;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const login = async (credentials: Credentials) => {
+    // This is now replaced by the OTP flow
+    setIsLoading(true);
+    try {
+      await sendOtp(credentials.email);
+    } catch (error) {
+      toast({
+        variant: "destructive",
         title: "Login failed",
-        description: "Please check your credentials and try again.",
+        description: "Please check your credentials and try again",
       });
       throw error;
     } finally {
@@ -69,13 +147,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       setUser(userData);
       toast({
         title: "Success!",
-        description: "Your account has been created.",
+        description: "Your account has been created",
       });
     } catch (error) {
       toast({
         variant: "destructive",
         title: "Registration failed",
-        description: "Please try again with different credentials.",
+        description: "Please try again with different credentials",
       });
       throw error;
     } finally {
@@ -90,7 +168,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       setUser(null);
       toast({
         title: "Logged out",
-        description: "You have been successfully logged out.",
+        description: "You have been successfully logged out",
       });
     } catch (error) {
       console.error(error);
@@ -114,12 +192,23 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     
     toast({
       title: "Success!",
-      description: "Logged in with Google successfully.",
+      description: "Logged in with Google successfully",
     });
   };
 
   return (
-    <AuthContext.Provider value={{ user, isLoading, login, register, logout, googleLogin }}>
+    <AuthContext.Provider value={{ 
+      user, 
+      isLoading, 
+      otpSent, 
+      authToken, 
+      sendOtp, 
+      verifyOtp, 
+      login, 
+      register, 
+      logout, 
+      googleLogin 
+    }}>
       {children}
     </AuthContext.Provider>
   );
